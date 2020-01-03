@@ -11,7 +11,6 @@
 
     <artifactId>nvwa-pojo</artifactId>
 
-
     <dependencies>
         <dependency>
             <groupId>com.codeagles</groupId>
