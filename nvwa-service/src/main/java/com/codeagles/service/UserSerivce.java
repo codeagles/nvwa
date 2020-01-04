@@ -1,5 +1,8 @@
 package com.codeagles.service;
 
+import com.codeagles.bo.UserBO;
+import com.codeagles.pojo.Users;
+
 /**
  * 用户服务层
  *
@@ -9,4 +12,6 @@ package com.codeagles.service;
 public interface UserSerivce {
 
     public boolean queryByUserName(String name);
+
+    public Users createUser(UserBO userBO);
 }
