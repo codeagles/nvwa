@@ -1,6 +1,7 @@
 package com.codeagles.controller;
 
 import com.codeagles.service.UserSerivce;
+import com.codeagles.utils.JSONResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,15 +23,15 @@ public class PassportController {
     private UserSerivce userSerivce;
 
     @GetMapping("/isExistUsername")
-    public int isExistUsername(@RequestParam String username){
+    public JSONResult isExistUsername(@RequestParam String username){
         if(StringUtils.isBlank(username)){
-            return 500;
+            return JSONResult.errorMsg("用户名不能为空");
         }
 
         boolean isExist = userSerivce.queryByUserName(username);
         if(isExist){
-            return 500;
+            return JSONResult.errorMsg("用户名已经存在");
         }
-        return 200;
+        return JSONResult.ok();
     }
 }
