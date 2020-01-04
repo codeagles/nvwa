@@ -3,6 +3,8 @@ package com.codeagles.controller;
 import com.codeagles.bo.UserBO;
 import com.codeagles.service.UserSerivce;
 import com.codeagles.utils.JSONResult;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @author hcn
  * @create 2020-01-03 11:14
  **/
+@Api(value = "注册登录", tags = {"用于注册登录的相关接口"})
 @RestController
 @RequestMapping(("/passport"))
 public class PassportController {
@@ -20,6 +23,7 @@ public class PassportController {
     @Autowired
     private UserSerivce userSerivce;
 
+    @ApiOperation(value = "用户名是否存在", notes = "用户名是否存在", httpMethod = "GET")
     @GetMapping("/isExistUsername")
     public JSONResult isExistUsername(@RequestParam String username){
         if(StringUtils.isBlank(username)){
@@ -32,7 +36,7 @@ public class PassportController {
         }
         return JSONResult.ok();
     }
-
+    @ApiOperation(value = "用户注册", notes = "用户注册", httpMethod = "POST")
     @PostMapping("/regist")
     public JSONResult regist(@RequestBody UserBO userBO){
 
