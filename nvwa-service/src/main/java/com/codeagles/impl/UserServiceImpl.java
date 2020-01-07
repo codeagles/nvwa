@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户服务实现类
@@ -73,5 +74,19 @@ public class UserServiceImpl implements UserSerivce {
 
         usersMapper.insert(user);
         return user;
+    }
+
+    @Override
+    public Users queryUserForLogin(String username, String password) {
+
+        Example example = new Example(Users.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        criteria.andEqualTo("username", username);
+        criteria.andEqualTo("password", password);
+
+        Users users = usersMapper.selectOneByExample(example);
+
+        return users;
     }
 }

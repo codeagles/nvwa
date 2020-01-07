@@ -1,8 +1,10 @@
 package com.codeagles.controller;
 
 import com.codeagles.bo.UserBO;
+import com.codeagles.pojo.Users;
 import com.codeagles.service.UserSerivce;
 import com.codeagles.utils.JSONResult;
+import com.codeagles.utils.MD5Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -66,6 +68,28 @@ public class PassportController {
         }
         //4. 实现注册
         userSerivce.createUser(userBO);
+        return JSONResult.ok();
+
+    }
+
+    @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
+    @PostMapping("/login")
+    public JSONResult login(@RequestBody UserBO userBO) throws Exception {
+
+        String username = userBO.getUsername();
+        String password = userBO.getPassword();
+
+        //0. 判断用户名和密码必须不为空
+        if(StringUtils.isBlank(username) ||
+                StringUtils.isBlank(password)){
+            return JSONResult.errorMsg("用户名或者密码不能为空");
+        }
+
+        //1. 实现注册
+        Users users = userSerivce.queryUserForLogin(username, MD5Utils.getMD5Str(password));
+        if (users == null) {
+            return JSONResult.errorMsg("用户名或者密码不正确");
+        }
         return JSONResult.ok();
 
     }
