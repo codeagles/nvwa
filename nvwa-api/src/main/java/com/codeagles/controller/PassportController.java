@@ -3,13 +3,18 @@ package com.codeagles.controller;
 import com.codeagles.bo.UserBO;
 import com.codeagles.pojo.Users;
 import com.codeagles.service.UserSerivce;
+import com.codeagles.utils.CookieUtils;
 import com.codeagles.utils.JSONResult;
+import com.codeagles.utils.JsonUtils;
 import com.codeagles.utils.MD5Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 用户控制层
@@ -40,7 +45,7 @@ public class PassportController {
     }
     @ApiOperation(value = "用户注册", notes = "用户注册", httpMethod = "POST")
     @PostMapping("/regist")
-    public JSONResult regist(@RequestBody UserBO userBO){
+    public JSONResult regist(@RequestBody UserBO userBO,HttpServletRequest request, HttpServletResponse response){
 
         String username = userBO.getUsername();
         String password = userBO.getPassword();
@@ -67,14 +72,18 @@ public class PassportController {
             return JSONResult.errorMsg("两次密码不一致");
         }
         //4. 实现注册
-        userSerivce.createUser(userBO);
+        Users users = userSerivce.createUser(userBO);
+
+        users = setNullProperty(users);
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
+
         return JSONResult.ok();
 
     }
 
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
     @PostMapping("/login")
-    public JSONResult login(@RequestBody UserBO userBO) throws Exception {
+    public JSONResult login(@RequestBody UserBO userBO, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         String username = userBO.getUsername();
         String password = userBO.getPassword();
@@ -92,7 +101,7 @@ public class PassportController {
         }
 
         users = setNullProperty(users);
-
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
 
 
         return JSONResult.ok(users);
