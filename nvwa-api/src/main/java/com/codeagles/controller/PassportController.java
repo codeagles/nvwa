@@ -32,35 +32,36 @@ public class PassportController {
 
     @ApiOperation(value = "用户名是否存在", notes = "用户名是否存在", httpMethod = "GET")
     @GetMapping("/isExistUsername")
-    public JSONResult isExistUsername(@RequestParam String username){
-        if(StringUtils.isBlank(username)){
+    public JSONResult isExistUsername(@RequestParam String username) {
+        if (StringUtils.isBlank(username)) {
             return JSONResult.errorMsg("用户名不能为空");
         }
 
         boolean isExist = userSerivce.queryByUserName(username);
-        if(isExist){
+        if (isExist) {
             return JSONResult.errorMsg("用户名已经存在");
         }
         return JSONResult.ok();
     }
+
     @ApiOperation(value = "用户注册", notes = "用户注册", httpMethod = "POST")
     @PostMapping("/regist")
-    public JSONResult regist(@RequestBody UserBO userBO,HttpServletRequest request, HttpServletResponse response){
+    public JSONResult regist(@RequestBody UserBO userBO, HttpServletRequest request, HttpServletResponse response) {
 
         String username = userBO.getUsername();
         String password = userBO.getPassword();
         String confirmPassword = userBO.getConfirmPassword();
 
         //0. 判断用户名和密码必须不为空
-        if(StringUtils.isBlank(username) ||
-                StringUtils.isBlank(password)||
-                StringUtils.isBlank(confirmPassword)){
+        if (StringUtils.isBlank(username) ||
+                StringUtils.isBlank(password) ||
+                StringUtils.isBlank(confirmPassword)) {
             return JSONResult.errorMsg("用户名或者密码不能为空");
         }
 
         //1. 查询用户名是否存在
         boolean isExist = userSerivce.queryByUserName(username);
-        if(isExist){
+        if (isExist) {
             return JSONResult.errorMsg("用户名已经存在");
         }
         //2. 密码长度不能少于6位
@@ -89,8 +90,8 @@ public class PassportController {
         String password = userBO.getPassword();
 
         //0. 判断用户名和密码必须不为空
-        if(StringUtils.isBlank(username) ||
-                StringUtils.isBlank(password)){
+        if (StringUtils.isBlank(username) ||
+                StringUtils.isBlank(password)) {
             return JSONResult.errorMsg("用户名或者密码不能为空");
         }
 
@@ -107,7 +108,7 @@ public class PassportController {
         return JSONResult.ok(users);
     }
 
-    private Users setNullProperty(Users users){
+    private Users setNullProperty(Users users) {
         users.setPassword(null);
         users.setMobile(null);
         users.setCreateTime(null);
@@ -115,5 +116,15 @@ public class PassportController {
         users.setBirthday(null);
         users.setEmail(null);
         return users;
+    }
+
+
+    @ApiOperation(value = "用户退出登录", notes = "用户退出登录", httpMethod = "POST")
+    @PostMapping("/logout")
+    public JSONResult logout(@RequestBody String userId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //清楚用户相关cookie
+        CookieUtils.deleteCookie(request, response, "user");
+
+        return JSONResult.ok();
     }
 }
