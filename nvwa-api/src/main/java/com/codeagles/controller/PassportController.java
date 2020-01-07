@@ -90,7 +90,21 @@ public class PassportController {
         if (users == null) {
             return JSONResult.errorMsg("用户名或者密码不正确");
         }
-        return JSONResult.ok();
 
+        users = setNullProperty(users);
+
+
+
+        return JSONResult.ok(users);
+    }
+
+    private Users setNullProperty(Users users){
+        users.setPassword(null);
+        users.setMobile(null);
+        users.setCreateTime(null);
+        users.setUpdateTime(null);
+        users.setBirthday(null);
+        users.setEmail(null);
+        return users;
     }
 }
