@@ -3,8 +3,10 @@ package com.codeagles.controller;
 import com.codeagles.bo.UserBO;
 import com.codeagles.enums.EnumYesOrNo;
 import com.codeagles.pojo.Carousel;
+import com.codeagles.pojo.Category;
 import com.codeagles.pojo.Users;
 import com.codeagles.service.CarouselService;
+import com.codeagles.service.CategoryService;
 import com.codeagles.service.UserSerivce;
 import com.codeagles.utils.CookieUtils;
 import com.codeagles.utils.JSONResult;
@@ -33,6 +35,8 @@ public class IndexController {
 
     @Autowired
     private CarouselService carouselService;
+    @Autowired
+    private CategoryService categoryService;
 
     @ApiOperation(value = "获取首页轮播图列表", notes = "获取首页轮播图列表", httpMethod = "GET")
     @GetMapping("/carousel")
@@ -40,6 +44,20 @@ public class IndexController {
 
         List<Carousel> carousels = carouselService.queryAll(EnumYesOrNo.YES.type);
         return JSONResult.ok(carousels);
+    }
+
+
+    /**
+     * 首页分类展示需求
+     * 1.第一次刷新主页查询大分类，渲染展示到首页
+     * 2.如果鼠标上移动到大分类，则加载其子分类的内容，如果已经存在子分类，则不需要加载(懒加载)
+     */
+    @ApiOperation(value = "获取商品分类(一级分类)", notes = "获取商品分类(一级分类)", httpMethod = "GET")
+    @GetMapping("/cats")
+    public JSONResult cats() {
+
+        List<Category> categories = categoryService.queryAllRootLevelCat();
+        return JSONResult.ok(categories);
     }
 
 
