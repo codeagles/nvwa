@@ -12,8 +12,10 @@ import com.codeagles.utils.CookieUtils;
 import com.codeagles.utils.JSONResult;
 import com.codeagles.utils.JsonUtils;
 import com.codeagles.utils.MD5Utils;
+import com.codeagles.vo.CategoryVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -60,5 +62,17 @@ public class IndexController {
         return JSONResult.ok(categories);
     }
 
+
+    @ApiOperation(value = "获取商品子分类", notes = "获取商品子分类", httpMethod = "GET")
+    @GetMapping("/subCat/{rootCatId}")
+    public JSONResult subCat(
+            @ApiParam(name = "rootCatId", value = "一级分类Id", required = true)
+            @PathVariable Integer rootCatId) {
+        if(rootCatId == null){
+            return JSONResult.errorMsg("分类id不存在");
+        }
+        List<CategoryVO> categoryVOS = categoryService.getSubCatList(rootCatId);
+        return JSONResult.ok(categoryVOS);
+    }
 
 }
