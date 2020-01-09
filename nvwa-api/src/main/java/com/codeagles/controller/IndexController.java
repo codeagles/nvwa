@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 用户控制层
+ * 首页控制层
  *
  * @author hcn
  * @create 2020-01-03 11:14
