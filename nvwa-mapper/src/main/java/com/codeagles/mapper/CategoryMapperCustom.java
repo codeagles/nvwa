@@ -1,9 +1,14 @@
 package com.codeagles.mapper;
 
-import com.codeagles.my.mapper.MyMapper;
-import com.codeagles.pojo.Category;
-import java.util.*;
+import com.codeagles.vo.NewItemsVO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 public interface CategoryMapperCustom {
 
     public List getSubCatList(Integer rootCatId);
+
+    public List<NewItemsVO> getSixNewItemsLazy(@Param("paramsMap") Map<String, Object> map);
+
 }

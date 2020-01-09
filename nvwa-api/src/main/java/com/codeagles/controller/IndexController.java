@@ -1,27 +1,22 @@
 package com.codeagles.controller;
 
-import com.codeagles.bo.UserBO;
 import com.codeagles.enums.EnumYesOrNo;
 import com.codeagles.pojo.Carousel;
 import com.codeagles.pojo.Category;
-import com.codeagles.pojo.Users;
 import com.codeagles.service.CarouselService;
 import com.codeagles.service.CategoryService;
-import com.codeagles.service.UserSerivce;
-import com.codeagles.utils.CookieUtils;
 import com.codeagles.utils.JSONResult;
-import com.codeagles.utils.JsonUtils;
-import com.codeagles.utils.MD5Utils;
 import com.codeagles.vo.CategoryVO;
+import com.codeagles.vo.NewItemsVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -75,4 +70,16 @@ public class IndexController {
         return JSONResult.ok(categoryVOS);
     }
 
+
+    @ApiOperation(value = "查询每一级分类下六个商品", notes = "查询每一级分类下六个商品", httpMethod = "GET")
+    @GetMapping("/sixNewItems/{rootCatId}")
+    public JSONResult sixNewItem(
+            @ApiParam(name = "rootCatId", value = "一级分类Id", required = true)
+            @PathVariable Integer rootCatId) {
+        if(rootCatId == null){
+            return JSONResult.errorMsg("分类id不存在");
+        }
+        List<NewItemsVO> sixNewItemsLazy = categoryService.getSixNewItemsLazy(rootCatId);
+        return JSONResult.ok(sixNewItemsLazy);
+    }
 }

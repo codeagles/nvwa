@@ -19,10 +19,6 @@
       <result column="subType" property="subType" />
       <result column="subFatherId" property="subFatherId" />
     </collection>
-
-
-
-
   </resultMap>
 
   <select id="getSubCatList" parameterType="int" resultMap="myCategoryVO">
@@ -44,5 +40,48 @@
       where
         f.father_id = #{rootCatId}
   </select>
+
+
+    <resultMap id="myNewItemVO"  type="com.codeagles.vo.NewItemsVO">
+        <id column="rootCatId" property="rootCatId"/>
+        <result column="rootCatName" property="rootCatName"/>
+        <result column="slogan" property="slogan"/>
+        <result column="catImage" property="catImage"/>
+        <result column="bgColor" property="bgColor"/>
+
+        <collection property="simpleItemList" ofType="com.codeagles.vo.SimpleItemVO">
+            <id column="itemId" property="itemId" />
+            <result column="itemName" property="itemName" />
+            <result column="itemUrl" property="itemUrl" />
+        </collection>
+    </resultMap>
+
+    <select id="getSixNewItemsLazy" resultMap="myNewItemVO" parameterType="Map">
+        select
+	        f.id as rootCatId,
+            f.`name` as rootCatName,
+            f.slogan as slogan,
+            f.cat_image as catImage,
+            f.bg_color as bgColor,
+            i.id as itemId,
+            i.item_name as itemName,
+            ii.url as itemUrl,
+            i.created_time as createTime
+        from
+            category f
+        LEFT JOIN items i on f.id = i.root_cat_id
+        LEFT JOIN items_img ii on ii.item_id = i.id
+        where
+            f.type =1
+        and
+            i.root_cat_id = #{paramsMap.rootCatId}
+        and
+            ii.is_main = 1
+        ORDER BY
+            i.created_time desc
+        LIMIT 0,6
+
+
+    </select>
 
 </mapper>

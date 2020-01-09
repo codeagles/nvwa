@@ -2,8 +2,9 @@ package com.codeagles.service;
 
 import com.codeagles.pojo.Category;
 import com.codeagles.vo.CategoryVO;
+import com.codeagles.vo.NewItemsVO;
 
-import java.util.*;
+import java.util.List;
 /**
  * 分类 服务层
  *
@@ -22,4 +23,10 @@ public interface CategoryService {
      *
      */
     public List<CategoryVO> getSubCatList(Integer rootCatId);
+
+    /**
+     * 查询每个分类下的六个商品
+     * *
+     */
+    public List<NewItemsVO> getSixNewItemsLazy(Integer rootCatId);
 }
