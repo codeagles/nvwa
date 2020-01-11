@@ -4,6 +4,8 @@ import com.codeagles.pojo.Items;
 import com.codeagles.pojo.ItemsImg;
 import com.codeagles.pojo.ItemsParam;
 import com.codeagles.pojo.ItemsSpec;
+import com.codeagles.vo.CommentLevelCountVO;
+import com.codeagles.vo.ItemCommentVO;
 
 import java.util.List;
 
@@ -41,5 +43,15 @@ public interface ItemService {
      * @return
      */
     public ItemsParam queryItemParam(String itemId);
+
+
+    /**
+     * 根据商品id 查询商品的评价等级数量
+     * @param itemId
+     */
+    public CommentLevelCountVO queryCommentCounts(String itemId);
+
+
+    public List<ItemCommentVO> queryPagedItemComments(String itemId, Integer commentLevel);
 
 }

@@ -6,6 +6,7 @@ import com.codeagles.pojo.ItemsParam;
 import com.codeagles.pojo.ItemsSpec;
 import com.codeagles.service.ItemService;
 import com.codeagles.utils.JSONResult;
+import com.codeagles.vo.CommentLevelCountVO;
 import com.codeagles.vo.ItemInfoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -60,4 +61,18 @@ public class ItemsController {
     }
 
 
+
+    @ApiOperation(value = "查询商品评价等级", notes = "查询商品评价等级", httpMethod = "GET")
+    @GetMapping("/commentLevel")
+    public JSONResult commentLevel(
+            @ApiParam(name = "itemId", value = "商品id", required = true)
+            String itemId) {
+
+
+        if(StringUtils.isBlank(itemId)){
+            return JSONResult.errorMsg("分类id不能为空");
+        }
+        CommentLevelCountVO commentLevelCountVO = itemService.queryCommentCounts(itemId);
+        return JSONResult.ok(commentLevelCountVO);
+    }
 }

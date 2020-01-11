@@ -1,21 +1,21 @@
 package com.codeagles.impl;
 
-import com.codeagles.mapper.ItemsImgMapper;
-import com.codeagles.mapper.ItemsMapper;
-import com.codeagles.mapper.ItemsParamMapper;
-import com.codeagles.mapper.ItemsSpecMapper;
-import com.codeagles.pojo.Items;
-import com.codeagles.pojo.ItemsImg;
-import com.codeagles.pojo.ItemsParam;
-import com.codeagles.pojo.ItemsSpec;
+import com.codeagles.enums.EnumCommentLevel;
+import com.codeagles.mapper.*;
+import com.codeagles.pojo.*;
 import com.codeagles.service.ItemService;
+import com.codeagles.vo.CommentLevelCountVO;
+import com.codeagles.vo.ItemCommentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.jws.Oneway;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 分类实现接口
@@ -34,6 +34,10 @@ public class ItemServiceImpl implements ItemService {
     private ItemsSpecMapper itemsSpecMapper;
     @Autowired
     private ItemsParamMapper itemsParamMapper;
+    @Autowired
+    private ItemsCommentsMapper itemsCommentsMapper;
+    @Autowired
+    private ItemsMapperCustom itemsMapperCustom;
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
@@ -72,5 +76,45 @@ public class ItemServiceImpl implements ItemService {
 
         criteria.andEqualTo("itemId", itemId);
         return itemsParamMapper.selectOneByExample(example);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public CommentLevelCountVO queryCommentCounts(String itemId) {
+
+        Integer goodCounts  = getCommentsCounts(itemId, EnumCommentLevel.GOOD.type);
+        Integer normalCounts  = getCommentsCounts(itemId, EnumCommentLevel.NORMAL.type);
+        Integer badCounts  = getCommentsCounts(itemId, EnumCommentLevel.BAD.type);
+        Integer totalCounts = goodCounts + normalCounts + badCounts;
+        CommentLevelCountVO commentLevelCountVO = new CommentLevelCountVO();
+        commentLevelCountVO.setGoodCounts(goodCounts);
+        commentLevelCountVO.setNormalCounts(normalCounts);
+        commentLevelCountVO.setBadCounts(badCounts);
+        commentLevelCountVO.setTotalCounts(totalCounts);
+
+        return commentLevelCountVO;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    Integer getCommentsCounts(String itemId, Integer level){
+        ItemsComments condition = new ItemsComments();
+        condition.setItemId(itemId);
+        if(level != null){
+            condition.setCommentLevel(level);
+        }
+        return itemsCommentsMapper.selectCount(condition);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public List<ItemCommentVO> queryPagedItemComments(String itemId, Integer commentLevel) {
+        Map<String , Object> paramsMap = new HashMap<>();
+        paramsMap.put("itemId",itemId);
+        paramsMap.put("level", commentLevel);
+
+        List<ItemCommentVO> itemCommentVOS = itemsMapperCustom.queryItemComments(paramsMap);
+        return itemCommentVOS;
+
+        return null;
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.codeagles.mapper.ItemsMapperCustom" >
+  
+  <select id="queryItemComments" resultType="com.codeagles.vo.ItemCommentVO" parameterType="Map">
+    select
+        ic.comment_level as commentLevel,
+        ic.content as content,
+        ic.sepc_name as sepcName,
+        ic.created_time as createdTime,
+        u.face as userFace,
+        u.nickname as nickname
+	from items_comments ic
+    LEFT JOIN `users` u on ic.user_id = u.id
+
+    LEFT JOIN items_spec s on ic.item_spec_id = s.id
+    where ic.item_id =#{paramsMap.itemId}
+    <if test="paramsMap.commnetLevel != null and paramsMap.commnetLevel !=''">
+        and comment_level = #{paramsMap.commnetLevel}
+    </if>
+
+    ORDER BY ic.created_time desc
+
+  </select>
+</mapper>
