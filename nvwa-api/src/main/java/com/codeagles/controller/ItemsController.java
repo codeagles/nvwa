@@ -6,6 +6,7 @@ import com.codeagles.pojo.ItemsParam;
 import com.codeagles.pojo.ItemsSpec;
 import com.codeagles.service.ItemService;
 import com.codeagles.utils.JSONResult;
+import com.codeagles.utils.PagedGridResult;
 import com.codeagles.vo.CommentLevelCountVO;
 import com.codeagles.vo.ItemInfoVO;
 import io.swagger.annotations.Api;
@@ -29,7 +30,7 @@ import java.util.List;
 @Api(value = "商品接口", tags = {"商品信息展示的相关接口"})
 @RestController
 @RequestMapping(("/items"))
-public class ItemsController {
+public class ItemsController extends  BaseController {
 
     @Autowired
     private ItemService itemService;
@@ -74,5 +75,33 @@ public class ItemsController {
         }
         CommentLevelCountVO commentLevelCountVO = itemService.queryCommentCounts(itemId);
         return JSONResult.ok(commentLevelCountVO);
+    }
+
+
+    @ApiOperation(value = "查询商品评论", notes = "查询商品评论", httpMethod = "GET")
+    @GetMapping("/comments")
+    public JSONResult commentLevel(
+            @ApiParam(name = "itemId", value = "商品id", required = true)
+                    String itemId,
+            @ApiParam(name = "level", value = "评价等级", required = false)
+                    Integer level,
+            @ApiParam(name = "page", value = "查询下一页的第几页", required = false)
+                    Integer page,
+            @ApiParam(name = "pageSize", value = "分页的每一页显示的条数", required = false)
+                    Integer pageSize) {
+
+
+        if(StringUtils.isBlank(itemId)){
+            return JSONResult.errorMsg("分类id不能为空");
+        }
+        if(page == null){
+            page = 1;
+        }
+        if(pageSize == null){
+            pageSize = COMMENT_PAGE_SIZE;
+        }
+
+        PagedGridResult pagedGridResult = itemService.queryPagedItemComments(itemId, level, page, pageSize);
+        return JSONResult.ok(pagedGridResult);
     }
 }

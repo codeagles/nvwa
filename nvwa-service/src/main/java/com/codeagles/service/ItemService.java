@@ -4,6 +4,7 @@ import com.codeagles.pojo.Items;
 import com.codeagles.pojo.ItemsImg;
 import com.codeagles.pojo.ItemsParam;
 import com.codeagles.pojo.ItemsSpec;
+import com.codeagles.utils.PagedGridResult;
 import com.codeagles.vo.CommentLevelCountVO;
 import com.codeagles.vo.ItemCommentVO;
 
@@ -52,6 +53,7 @@ public interface ItemService {
     public CommentLevelCountVO queryCommentCounts(String itemId);
 
 
-    public List<ItemCommentVO> queryPagedItemComments(String itemId, Integer commentLevel);
+    public PagedGridResult queryPagedItemComments(String itemId, Integer commentLevel,
+                                                  Integer page, Integer pageSize);
 
 }

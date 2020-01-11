@@ -41,5 +41,10 @@ mybatis:
     mappers: com.codeagles.my.mapper.MyMapper
     not-empty: false
     identity: MYSQL
+
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true
+
 server:
   port: 8088

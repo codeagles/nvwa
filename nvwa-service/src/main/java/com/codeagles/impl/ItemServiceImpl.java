@@ -4,8 +4,11 @@ import com.codeagles.enums.EnumCommentLevel;
 import com.codeagles.mapper.*;
 import com.codeagles.pojo.*;
 import com.codeagles.service.ItemService;
+import com.codeagles.utils.PagedGridResult;
 import com.codeagles.vo.CommentLevelCountVO;
 import com.codeagles.vo.ItemCommentVO;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -107,14 +110,26 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
-    public List<ItemCommentVO> queryPagedItemComments(String itemId, Integer commentLevel) {
+    public PagedGridResult queryPagedItemComments(String itemId, Integer commentLevel, Integer page, Integer pageSize) {
         Map<String , Object> paramsMap = new HashMap<>();
         paramsMap.put("itemId",itemId);
         paramsMap.put("level", commentLevel);
 
-        List<ItemCommentVO> itemCommentVOS = itemsMapperCustom.queryItemComments(paramsMap);
-        return itemCommentVOS;
 
-        return null;
+        PageHelper.startPage(page,pageSize);
+        List<ItemCommentVO> itemCommentVOS = itemsMapperCustom.queryItemComments(paramsMap);
+        PagedGridResult pagedGridResult = this.setterPagedGrid(itemCommentVOS,page);
+        return pagedGridResult;
+
+    }
+
+    private PagedGridResult setterPagedGrid( List<?> list,int page){
+        PageInfo<?> pageList = new PageInfo<>(list);
+        PagedGridResult grid = new PagedGridResult();
+        grid.setPage(page);
+        grid.setRows(list);
+        grid.setTotal(pageList.getPages());
+        grid.setRecords(pageList.getTotal());
+        return grid;
     }
 }

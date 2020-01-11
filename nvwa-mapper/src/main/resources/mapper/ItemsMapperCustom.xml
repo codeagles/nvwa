@@ -6,17 +6,17 @@
     select
         ic.comment_level as commentLevel,
         ic.content as content,
-        ic.sepc_name as sepcName,
+        ic.sepc_name as specName,
         ic.created_time as createdTime,
         u.face as userFace,
         u.nickname as nickname
 	from items_comments ic
     LEFT JOIN `users` u on ic.user_id = u.id
 
-    LEFT JOIN items_spec s on ic.item_spec_id = s.id
     where ic.item_id =#{paramsMap.itemId}
-    <if test="paramsMap.commnetLevel != null and paramsMap.commnetLevel !=''">
-        and comment_level = #{paramsMap.commnetLevel}
+
+    <if test="paramsMap.level != null and paramsMap.level !=''">
+        and ic.comment_level = #{paramsMap.level}
     </if>
 
     ORDER BY ic.created_time desc
