@@ -4,6 +4,7 @@ import com.codeagles.enums.EnumCommentLevel;
 import com.codeagles.mapper.*;
 import com.codeagles.pojo.*;
 import com.codeagles.service.ItemService;
+import com.codeagles.utils.DesensitizationUtil;
 import com.codeagles.utils.PagedGridResult;
 import com.codeagles.vo.CommentLevelCountVO;
 import com.codeagles.vo.ItemCommentVO;
@@ -119,6 +120,11 @@ public class ItemServiceImpl implements ItemService {
         PageHelper.startPage(page,pageSize);
         List<ItemCommentVO> itemCommentVOS = itemsMapperCustom.queryItemComments(paramsMap);
         PagedGridResult pagedGridResult = this.setterPagedGrid(itemCommentVOS,page);
+
+        for (ItemCommentVO itemCommentVO : itemCommentVOS) {
+            itemCommentVO.setNickname(DesensitizationUtil.commonDisplay(itemCommentVO.getNickname()));
+        }
+
         return pagedGridResult;
 
     }
