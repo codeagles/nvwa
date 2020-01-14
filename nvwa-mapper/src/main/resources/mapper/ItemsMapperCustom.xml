@@ -64,4 +64,39 @@
     <!--  k: 默认，代表默认排序，根据name-->
     <!--  c: 根据销量排序-->
     <!--  p: 根据价格排序-->
+
+    <select id="searchItemsByThirdCat" resultType="com.codeagles.vo.SearchItemVO" parameterType="Map">
+        select
+            i.id as itemId,
+            i.item_name as itemName,
+            i.sell_counts as sellCounts,
+            im.url as imgUrl,
+            tempSpec.price_discount as price
+        from items i
+        left JOIN
+        items_img im
+        on im.item_id = i.id
+        LEFT JOIN
+        (select item_id,MIN(price_discount) as price_discount from items_spec GROUP BY item_id
+        ) tempSpec
+        on tempSpec.item_id = i.id
+        where
+        im.is_main = 1
+        and
+        i.cat_id = #{paramsMap.catId}
+        order by
+        <choose>
+            <when test="paramsMap.sort ==  &quot;c&quot;">
+                i.sell_counts desc
+            </when>
+            <when test="paramsMap.sort == &quot;p&quot;">
+                tempSpec.price_discount asc
+            </when>
+            <otherwise>
+                i.item_name asc
+            </otherwise>
+        </choose>
+
+
+    </select>
 </mapper>
