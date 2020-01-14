@@ -8,6 +8,7 @@ import com.codeagles.utils.DesensitizationUtil;
 import com.codeagles.utils.PagedGridResult;
 import com.codeagles.vo.CommentLevelCountVO;
 import com.codeagles.vo.ItemCommentVO;
+import com.codeagles.vo.SearchItemVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.jws.Oneway;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,5 +137,20 @@ public class ItemServiceImpl implements ItemService {
         grid.setTotal(pageList.getPages());
         grid.setRecords(pageList.getTotal());
         return grid;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public PagedGridResult searchItems(String keywords, String sort, Integer page, Integer pageSize) {
+
+        Map<String , Object> paramsMap = new HashMap<>();
+        paramsMap.put("keywords",keywords);
+        paramsMap.put("sort", sort);
+
+
+        PageHelper.startPage(page,pageSize);
+        List<SearchItemVO> searchItemVOS = itemsMapperCustom.searchItems(paramsMap);
+
+        return this.setterPagedGrid(searchItemVOS,page);
     }
 }

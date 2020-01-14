@@ -13,3 +13,5 @@ FROM `category` f
 left JOIN category c
 on f.id = c.father_id
 where f.father_id = 1
+
+-- 搜索商品列表
