@@ -9,6 +9,7 @@ import com.codeagles.utils.PagedGridResult;
 import com.codeagles.vo.CommentLevelCountVO;
 import com.codeagles.vo.ItemCommentVO;
 import com.codeagles.vo.SearchItemVO;
+import com.codeagles.vo.ShopcartVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 分类实现接口
@@ -165,5 +164,14 @@ public class ItemServiceImpl implements ItemService {
         List<SearchItemVO> searchItemVOS = itemsMapperCustom.searchItemsByThirdCat(paramsMap);
 
         return this.setterPagedGrid(searchItemVOS,page);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public List<ShopcartVO> queryItemsBySpecIds(String specIds) {
+        String[] ids = specIds.split(",");
+        List<String> specIdsList = new ArrayList<>();
+        Collections.addAll(specIdsList,ids);
+        return itemsMapperCustom.queryItemsBySpecIds(specIdsList);
     }
 }

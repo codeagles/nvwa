@@ -41,4 +41,22 @@ public class ShopcartController {
         return JSONResult.ok();
     }
 
+
+    @ApiOperation(value = "删除购物车中指定商品", notes = "删除购物车中指定商品", httpMethod = "POST")
+    @PostMapping("/del")
+    public JSONResult del(
+            @RequestParam String userId,
+            @RequestParam String itemSpecId,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        if (StringUtils.isBlank(userId)) {
+            return JSONResult.errorMsg("用户id不能为空");
+        }
+
+        System.out.println(itemSpecId);
+
+        // TODO 前端用户在登录的情况下，删除购物车中数据，会到redis中同时在后端同步删除购物车中商品
+        return JSONResult.ok();
+    }
 }

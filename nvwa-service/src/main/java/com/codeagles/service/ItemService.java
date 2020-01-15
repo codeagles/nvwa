@@ -6,6 +6,7 @@ import com.codeagles.pojo.ItemsParam;
 import com.codeagles.pojo.ItemsSpec;
 import com.codeagles.utils.PagedGridResult;
 import com.codeagles.vo.CommentLevelCountVO;
+import com.codeagles.vo.ShopcartVO;
 
 import java.util.List;
 
@@ -51,11 +52,40 @@ public interface ItemService {
      */
     public CommentLevelCountVO queryCommentCounts(String itemId);
 
-
+    /**
+     * 根据商品id查询评论
+     * @param itemId
+     * @param commentLevel
+     * @param page
+     * @param pageSize
+     * @return
+     */
     public PagedGridResult queryPagedItemComments(String itemId, Integer commentLevel,
                                                   Integer page, Integer pageSize);
 
-
+    /**
+     * 根据关键词搜索商品，可排序
+     * @param keywords
+     * @param sort
+     * @param page
+     * @param pageSize
+     * @return
+     */
     public PagedGridResult searchItems(String keywords, String sort, Integer page, Integer pageSize);
+    /**
+     * 根据三级分类id搜索商品，可排序
+     * @param catId
+     * @param sort
+     * @param page
+     * @param pageSize
+     * @return
+     */
     public PagedGridResult searchItems(Integer catId, String sort, Integer page, Integer pageSize);
+
+    /**
+     * 根据规格ids查询最新的购物车中商品的数据(用于刷新渲染购物车中的数据)
+     * @param specIds
+     * @return
+     */
+    public List<ShopcartVO> queryItemsBySpecIds(String specIds);
 }

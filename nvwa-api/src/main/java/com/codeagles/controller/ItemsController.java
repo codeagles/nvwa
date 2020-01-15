@@ -9,6 +9,7 @@ import com.codeagles.utils.JSONResult;
 import com.codeagles.utils.PagedGridResult;
 import com.codeagles.vo.CommentLevelCountVO;
 import com.codeagles.vo.ItemInfoVO;
+import com.codeagles.vo.ShopcartVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -158,5 +159,24 @@ public class ItemsController extends  BaseController {
 
         PagedGridResult pagedGridResult = itemService.searchItems(catId, sort, page, pageSize);
         return JSONResult.ok(pagedGridResult);
+    }
+
+    /**
+     * 用于用户长时间未登录网站，刷新购物车中的数据，主要是商品价格
+     * @param itemSpecIds
+     * @return
+     */
+    @ApiOperation(value = "根据商品规格ids查询最新的商品数据", notes = "根据商品规格ids查询最新的商品数据", httpMethod = "GET")
+    @GetMapping("/refresh")
+    public JSONResult refresh(
+            @ApiParam(name = "itemSpecIds", value = "规格分类ids", required = true, example = "1001,1002,1003")
+                    String itemSpecIds
+          ) {
+
+        if(StringUtils.isBlank(itemSpecIds)){
+            return JSONResult.ok();
+        }
+        List<ShopcartVO> shopcartVOS = itemService.queryItemsBySpecIds(itemSpecIds);
+        return JSONResult.ok(shopcartVOS);
     }
 }
