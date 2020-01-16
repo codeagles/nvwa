@@ -1,8 +1,19 @@
 package com.codeagles.controller;
 
+import com.codeagles.pojo.UserAddress;
+import com.codeagles.service.AddressSerivce;
+import com.codeagles.utils.JSONResult;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 订单控制层
@@ -12,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @Api(value = "地址相关", tags = {"用于地址相关接口"})
 @RestController
-@RequestMapping(("/index"))
+@RequestMapping(("/address"))
 public class AddressController {
 
     /**
@@ -23,4 +34,23 @@ public class AddressController {
      * 4. 修改收货地址
      * 5. 设置默认地址
      */
+    @Autowired
+    private AddressSerivce addressSerivce;
+
+
+    @ApiOperation(value = "根据userId查询地址列表", notes = "根据userId查询地址列表", httpMethod = "POST")
+    @PostMapping("/list")
+    public JSONResult list(
+            @ApiParam(name = "userId", value = "用户id", required = true, example = "xx-1001")
+            @RequestParam(defaultValue = "userId", required = true) String userId
+    ) {
+
+        if(StringUtils.isBlank(userId)){
+            return JSONResult.errorMsg("");
+        }
+        List<UserAddress> userAddresses = addressSerivce.queryAll(userId);
+        return JSONResult.ok(userAddresses);
+    }
+
+
 }
