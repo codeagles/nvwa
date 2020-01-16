@@ -1,6 +1,7 @@
 package com.codeagles.service;
 
 import com.codeagles.pojo.UserAddress;
+import com.codeagles.bo.AddressBO;
 
 import java.util.List;
 
@@ -13,4 +14,16 @@ import java.util.List;
 public interface AddressSerivce {
 
     public List<UserAddress> queryAll(String userId);
+
+    /**
+     * 新增收货人地址
+     * @param addressVO
+     */
+    public void addNewUserAddress(AddressBO addressVO);
+
+    /**
+     * 修改收货人地址
+     * @param addressVO
+     */
+    public void updateUserAddress(AddressBO addressVO);
 }
