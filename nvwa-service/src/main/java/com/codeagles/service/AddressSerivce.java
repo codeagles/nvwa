@@ -26,4 +26,19 @@ public interface AddressSerivce {
      * @param addressVO
      */
     public void updateUserAddress(AddressBO addressVO);
+
+    /**
+     * 删除地址 根据用户id与地址id
+     * @param userId
+     * @param addressId
+     */
+    public void deleteUserAddress(String userId, String addressId);
+
+    /**
+     * 根据用户id与地址id 修改地址为默认地址
+     * @param userId
+     * @param addressId
+     */
+    public void updateAddressToBeDefault(String userId, String addressId);
+
 }

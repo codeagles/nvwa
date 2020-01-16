@@ -44,7 +44,7 @@ public class AddressController {
             @RequestParam(defaultValue = "userId", required = true) String userId
     ) {
 
-        if(StringUtils.isBlank(userId)){
+        if (StringUtils.isBlank(userId)) {
             return JSONResult.errorMsg("");
         }
         List<UserAddress> userAddresses = addressSerivce.queryAll(userId);
@@ -67,7 +67,7 @@ public class AddressController {
         return JSONResult.ok();
     }
 
-    private JSONResult checkAddress(AddressBO addressBO){
+    private JSONResult checkAddress(AddressBO addressBO) {
         String receiver = addressBO.getReceiver();
         if (StringUtils.isBlank(receiver)) {
             return JSONResult.errorMsg("收货人不能为空");
@@ -92,9 +92,9 @@ public class AddressController {
         String city = addressBO.getCity();
         String district = addressBO.getDistrict();
         String detail = addressBO.getDetail();
-        if (StringUtils.isBlank(province)||
-                StringUtils.isBlank(city)||
-                StringUtils.isBlank(district)||
+        if (StringUtils.isBlank(province) ||
+                StringUtils.isBlank(city) ||
+                StringUtils.isBlank(district) ||
                 StringUtils.isBlank(detail)) {
             return JSONResult.errorMsg("收货地址信息不能为空");
         }
@@ -122,6 +122,48 @@ public class AddressController {
         }
 
         addressSerivce.updateUserAddress(addressBO);
+        return JSONResult.ok();
+    }
+
+
+    @ApiOperation(value = "用户删除地址", notes = "用户删除地址", httpMethod = "POST")
+    @PostMapping("/delete")
+    public JSONResult delete(
+            @ApiParam(name = "userId", value = "用户id")
+            @RequestParam String userId,
+            @ApiParam(name = "addressId", value = "地址id")
+            @RequestParam String addressId
+    ) {
+
+        if (StringUtils.isBlank(addressId)) {
+            JSONResult.errorMsg("修改地址错误：addressId不能为空");
+        }
+        if (StringUtils.isBlank(userId)) {
+            JSONResult.errorMsg("修改地址错误：userId不能为空");
+        }
+
+        addressSerivce.deleteUserAddress(userId, addressId);
+        return JSONResult.ok();
+    }
+
+
+    @ApiOperation(value = "用户删除地址", notes = "用户删除地址", httpMethod = "POST")
+    @PostMapping("/setDefalut")
+    public JSONResult setDefault(
+            @ApiParam(name = "userId", value = "用户id")
+            @RequestParam String userId,
+            @ApiParam(name = "addressId", value = "地址id")
+            @RequestParam String addressId
+    ) {
+
+        if (StringUtils.isBlank(addressId)) {
+            JSONResult.errorMsg("设置地址错误：addressId不能为空");
+        }
+        if (StringUtils.isBlank(userId)) {
+            JSONResult.errorMsg("设置地址错误：userId不能为空");
+        }
+
+        addressSerivce.updateAddressToBeDefault(userId, addressId);
         return JSONResult.ok();
     }
 }

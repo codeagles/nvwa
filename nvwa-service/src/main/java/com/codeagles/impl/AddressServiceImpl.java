@@ -1,9 +1,10 @@
 package com.codeagles.impl;
 
+import com.codeagles.bo.AddressBO;
+import com.codeagles.enums.EnumYesOrNo;
 import com.codeagles.mapper.UserAddressMapper;
 import com.codeagles.pojo.UserAddress;
 import com.codeagles.service.AddressSerivce;
-import com.codeagles.bo.AddressBO;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,5 +68,35 @@ public class AddressServiceImpl implements AddressSerivce {
         updateAddress.setId(addressId);
         updateAddress.setUpdatedTime(new Date());
         userAddressMapper.updateByPrimaryKeySelective(updateAddress);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void deleteUserAddress(String userId, String addressId) {
+        UserAddress address = new UserAddress();
+        address.setUserId(userId);
+        address.setId(addressId);
+        userAddressMapper.delete(address);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void updateAddressToBeDefault(String userId, String addressId) {
+        //1.查找默认地址
+        UserAddress queryAddress = new UserAddress();
+        queryAddress.setUserId(userId);
+        queryAddress.setIsDefault(EnumYesOrNo.YES.type);
+        List<UserAddress> userAddressList = userAddressMapper.select(queryAddress);
+        for (UserAddress address : userAddressList) {
+            address.setIsDefault(EnumYesOrNo.NO.type);
+            userAddressMapper.updateByPrimaryKeySelective(address);
+        }
+
+        //2.修改为默认地址
+        UserAddress address = new UserAddress();
+        address.setUserId(userId);
+        address.setId(addressId);
+        address.setIsDefault(EnumYesOrNo.YES.type);
+        userAddressMapper.updateByPrimaryKeySelective(address);
     }
 }
