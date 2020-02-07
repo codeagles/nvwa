@@ -1,6 +1,7 @@
 package com.codeagles.impl;
 
 import com.codeagles.enums.EnumCommentLevel;
+import com.codeagles.enums.EnumYesOrNo;
 import com.codeagles.mapper.*;
 import com.codeagles.pojo.*;
 import com.codeagles.service.ItemService;
@@ -173,5 +174,42 @@ public class ItemServiceImpl implements ItemService {
         List<String> specIdsList = new ArrayList<>();
         Collections.addAll(specIdsList,ids);
         return itemsMapperCustom.queryItemsBySpecIds(specIdsList);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public ItemsSpec queryItemSpecById(String specId) {
+
+        return itemsSpecMapper.selectByPrimaryKey(specId);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public String queryItemMainImgById(String itemId) {
+        ItemsImg itemsImg = new ItemsImg();
+        itemsImg.setId(itemId);
+        itemsImg.setIsMain(EnumYesOrNo.YES.type);
+        ItemsImg img = itemsImgMapper.selectOne(itemsImg);
+
+        return img != null ? img.getUrl() : "";
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void decreaseItemSpecStock(String specId, int buyCounts) {
+        /**
+         * 解决超卖问题
+         * 1. synchronized 不推荐使用，集群下无用，性能低下
+         * 2. 锁数据库 不推荐 导致数据库性能低下
+         * 3. 分布式锁 zookeeper redis
+         *
+         * 单体应用可以使用数据库的乐观锁的机制
+         */
+
+        int result = itemsMapperCustom.decreaseItemSpecStock(specId, buyCounts);
+        if(result != 1){
+            throw  new RuntimeException("订单创建失败！库存不足！");
+
+        }
     }
 }

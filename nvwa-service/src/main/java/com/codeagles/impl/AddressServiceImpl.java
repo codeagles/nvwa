@@ -99,4 +99,15 @@ public class AddressServiceImpl implements AddressSerivce {
         address.setIsDefault(EnumYesOrNo.YES.type);
         userAddressMapper.updateByPrimaryKeySelective(address);
     }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public UserAddress queryUserAddress(String userId, String addressId) {
+
+        UserAddress singleAddress = new UserAddress();
+        singleAddress.setUserId(userId);
+        singleAddress.setId(addressId);
+        return userAddressMapper.selectOne(singleAddress);
+
+    }
 }

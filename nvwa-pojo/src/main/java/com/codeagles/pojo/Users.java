@@ -58,13 +58,13 @@ public class Users {
     /**
      * 创建时间 创建时间
      */
-    @Column(name = "create_time")
+    @Column(name = "created_time")
     private Date createTime;
 
     /**
      * 更新时间 更新时间
      */
-    @Column(name = "update_time")
+    @Column(name = "updated_time")
     private Date updateTime;
 
     /**

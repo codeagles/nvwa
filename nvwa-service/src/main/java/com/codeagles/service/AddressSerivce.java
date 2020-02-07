@@ -41,4 +41,6 @@ public interface AddressSerivce {
      */
     public void updateAddressToBeDefault(String userId, String addressId);
 
+
+    public UserAddress queryUserAddress(String userId, String addressId);
 }
