@@ -187,7 +187,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public String queryItemMainImgById(String itemId) {
         ItemsImg itemsImg = new ItemsImg();
-        itemsImg.setId(itemId);
+        itemsImg.setItemId(itemId);
         itemsImg.setIsMain(EnumYesOrNo.YES.type);
         ItemsImg img = itemsImgMapper.selectOne(itemsImg);
 
