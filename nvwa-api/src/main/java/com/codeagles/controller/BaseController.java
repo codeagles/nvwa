@@ -13,4 +13,10 @@ public class BaseController {
     public static final Integer PAGE_SIZE = 20;
     public static final String FOOD_SHOPCART = "shopcart";
 
+    //支付中心的调用地址
+    String paymentUrl = "http://payment.t.mukewang.com/foodie-payment/payment/createMerchantOrder";
+    //微信支付成功-> 支付中心 -> 现在商户平台
+    //回调通知URL
+    String payReturnUrl = "http://localhost:8080/orders/notifyMerchantOrderPaid";
+
 }

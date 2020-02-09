@@ -1,6 +1,7 @@
 package com.codeagles.service;
 
 import com.codeagles.bo.SubmitOrderBo;
+import com.codeagles.vo.OrderVO;
 
 /**
  * 订单接口
@@ -12,7 +13,7 @@ public interface OrderService {
      * 用于创建订单相关信息
      * @param submitOrderBo
      */
-    public String createOrder(SubmitOrderBo submitOrderBo);
+    public OrderVO createOrder(SubmitOrderBo submitOrderBo);
 
     /**
      * 修改订单
