@@ -1,6 +1,7 @@
 package com.codeagles.service;
 
 import com.codeagles.bo.SubmitOrderBo;
+import com.codeagles.pojo.OrderStatus;
 import com.codeagles.vo.OrderVO;
 
 /**
@@ -21,4 +22,11 @@ public interface OrderService {
      * @param orderStatus
      */
     public void updateOrderStatus(String orderId, Integer orderStatus);
+
+    /**
+     * 查询订单状态
+     * @param orderId
+     * @return
+     */
+    public OrderStatus queryOrederStatusInfo(String orderId);
 }

@@ -3,6 +3,7 @@ package com.codeagles.controller;
 import com.codeagles.bo.SubmitOrderBo;
 import com.codeagles.enums.EnumOrderStatus;
 import com.codeagles.enums.EnumPayMethod;
+import com.codeagles.pojo.OrderStatus;
 import com.codeagles.service.OrderService;
 import com.codeagles.utils.JSONResult;
 import com.codeagles.vo.MerchantOrdersVO;
@@ -42,7 +43,7 @@ public class OrdersController extends BaseController {
         System.out.println(submitOrderBo.toString());
 
         if (!submitOrderBo.getPayMethod().equals(EnumPayMethod.WEIXIN.type) &&
-            !submitOrderBo.getPayMethod().equals(EnumPayMethod.ALIPAY.type)) {
+                !submitOrderBo.getPayMethod().equals(EnumPayMethod.ALIPAY.type)) {
             return JSONResult.errorMsg("支付方式不支持");
         }
         //1.创建订单
@@ -66,10 +67,10 @@ public class OrdersController extends BaseController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("imoocUserId", "tmp2020");
-        headers.add("password", "tmp2020");
+        headers.add("imoocUserId", "1385507-251539846");
+        headers.add("password", "dwpr-0rok-r09i-e0o2");
 
-        HttpEntity<MerchantOrdersVO> entity = new HttpEntity<>(merchantOrdersVO,headers);
+        HttpEntity<MerchantOrdersVO> entity = new HttpEntity<>(merchantOrdersVO, headers);
         ResponseEntity<JSONResult> responseEntity = restTemplate.postForEntity(paymentUrl, entity, JSONResult.class);
         JSONResult paymentResult = responseEntity.getBody();
         if (paymentResult.getStatus() != 200) {
@@ -81,11 +82,22 @@ public class OrdersController extends BaseController {
 
     @PostMapping("notifyMerchantOrderPaid")
     @ApiOperation(value = "支付回调地址", notes = "支付回调地址", httpMethod = "POST")
-    @ApiImplicitParam(name = "merchantOrderId", value = "merchantOrderId" , required = true)
+    @ApiImplicitParam(name = "merchantOrderId", value = "merchantOrderId", required = true)
     public int notifyMerchantOrderPaid(
-           @RequestParam String merchantOrderId){
+            @RequestParam String merchantOrderId) {
 
         orderService.updateOrderStatus(merchantOrderId, EnumOrderStatus.WAIT_DELIVER.type);
         return HttpStatus.OK.value();
     }
+
+    @PostMapping("getPaidOrderInfo")
+    @ApiOperation(value = "轮询查询订单信息", notes = "轮询查询订单信息", httpMethod = "GET")
+    @ApiImplicitParam(name = "orderId", value = "orderId", required = true)
+    public JSONResult getPaidOrderInfo(
+            @RequestParam String orderId) {
+
+        OrderStatus orderStatus = orderService.queryOrederStatusInfo(orderId);
+        return JSONResult.ok(orderStatus);
+    }
+
 }

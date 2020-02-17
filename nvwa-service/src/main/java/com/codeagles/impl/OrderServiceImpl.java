@@ -144,4 +144,14 @@ public class OrderServiceImpl implements OrderService {
 
        orderStatusMapper.updateByPrimaryKeySelective(paidStatus);
     }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public OrderStatus queryOrederStatusInfo(String orderId) {
+
+        OrderStatus orderStatus = new OrderStatus();
+        orderStatus.setOrderId(orderId);
+        return orderStatusMapper.selectByPrimaryKey(orderStatus);
+
+    }
 }
