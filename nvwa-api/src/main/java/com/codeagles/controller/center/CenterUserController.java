@@ -97,6 +97,12 @@ public class CenterUserController extends BaseController {
                     // 更改文件名
                     String[] split = fileName.split("\\.");
                     String suffix = split[split.length - 1];
+
+                    if(!suffix.equalsIgnoreCase("png")&&
+                            !suffix.equalsIgnoreCase("jpg")&&
+                            !suffix.equalsIgnoreCase("jpeg")){
+                        return JSONResult.errorMsg("图片格式不正确");
+                    }
                     //文件名重组 覆盖式上传， 增量式：额外拼接当前时间
                     String newFileName = "face-"+userId+"."+suffix;
 
