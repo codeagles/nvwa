@@ -2,6 +2,8 @@ package com.codeagles.controller;
 
 import org.springframework.stereotype.Controller;
 
+import java.io.File;
+
 /**
  * @author hcn
  * @create 2020-01-11 13:58
@@ -19,5 +21,16 @@ public class BaseController {
     //回调通知URL
 //    String payReturnUrl = "http://localhost:8080/orders/notifyMerchantOrderPaid";
     String payReturnUrl = "http://7y76uq.natappfree.cc/orders/notifyMerchantOrderPaid";
+
+
+    //用户上传头像的位置
+    public static final String IMAGE_USER_FACE_LOCATION =
+            File.separator +"Users" +
+            File.separator +"codeagles" +
+            File.separator +"IdeaProjects" +
+            File.separator +"new" +
+            File.separator +"images" +
+            File.separator +"foodie" +
+            File.separator +"faces";
 
 }
