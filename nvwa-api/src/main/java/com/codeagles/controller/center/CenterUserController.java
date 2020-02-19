@@ -6,6 +6,7 @@ import com.codeagles.pojo.Users;
 import com.codeagles.resource.FileUpload;
 import com.codeagles.service.center.CenterUserService;
 import com.codeagles.utils.CookieUtils;
+import com.codeagles.utils.DateUtils;
 import com.codeagles.utils.JSONResult;
 import com.codeagles.utils.JsonUtils;
 import io.swagger.annotations.Api;
@@ -101,6 +102,8 @@ public class CenterUserController extends BaseController {
 
                     //上传的头像最终保存的位置
                     String finalFilePath = fileSpace + uploadPathPrefix + File.separator + newFileName;
+                    //用于提供给web服务的地址
+                    uploadPathPrefix  += ("/" + newFileName);
                     File outFile = new File(finalFilePath);
                     if(outFile.getParentFile() != null){
                         //创建文件夹
@@ -130,8 +133,22 @@ public class CenterUserController extends BaseController {
             return JSONResult.errorMsg("文件不能为空");
         }
 
+        //更新用户头像到数据库
+        String imageServerUrl = fileUpload.getImageServerUrl();
+        //由于浏览器可能存在缓存，所以增加时间戳来保证更新后的图片及时刷新
+        String finalUserFaceUrl = imageServerUrl + uploadPathPrefix + "?t="+ DateUtils.getCurrentDateString(DateUtils.DATE_PATTERN);
+        Users users = centerUserService.updateUserFace(userId, finalUserFaceUrl);
+
+        users = setNullProperty(users);
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
+        //TODO 后续会增加令牌token，整合redis，分布式会话
+
         return JSONResult.ok();
     }
+
+
+
+
 
     private Map<String, String> getErrors(BindingResult bindingResult){
 
