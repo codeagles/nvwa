@@ -2,6 +2,7 @@ package com.codeagles.service.center;
 
 import com.codeagles.pojo.Orders;
 import com.codeagles.utils.PagedGridResult;
+import com.codeagles.vo.OrderStatusCountVO;
 
 /**
  * 订单服务层
@@ -54,6 +55,22 @@ public interface MyOrdersService {
      */
     public boolean deleteOrder(String userId ,String orderId);
 
+    /**
+     * 查询订单数
+     * @param userId
+     * @return
+     */
+    public OrderStatusCountVO getOrderStatusCounts(String userId);
 
+    /**
+     * 获得分页的订单动向
+     * @param userId
+     * @param pageSize
+     * @param page
+     * @return
+     */
+    public PagedGridResult getOrderTrend(String userId,
+                                        Integer pageSize,
+                                        Integer page);
 
 }

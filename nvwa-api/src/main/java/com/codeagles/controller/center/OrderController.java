@@ -4,6 +4,7 @@ import com.codeagles.controller.BaseController;
 import com.codeagles.enums.EnumOrderStatus;
 import com.codeagles.utils.JSONResult;
 import com.codeagles.utils.PagedGridResult;
+import com.codeagles.vo.OrderStatusCountVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -97,5 +98,35 @@ public class OrderController extends BaseController {
     }
 
 
+    @PostMapping("statusCounts")
+    @ApiOperation(value = "渲染订单数", notes = "渲染订单数", httpMethod = "POST")
+    public JSONResult statusCounts(@RequestParam String userId) {
+        if(StringUtils.isBlank(userId)){
+            return JSONResult.errorMsg(null);
+        }
+        OrderStatusCountVO orderStatusCounts = myOrdersService.getOrderStatusCounts(userId);
+        return JSONResult.ok(orderStatusCounts);
+    }
+
+    @PostMapping("trend")
+    @ApiOperation(value = "订单动向详情", notes = "订单动向详情", httpMethod = "POST")
+    public JSONResult trend(@ApiParam(name = "userId", value = "用户id", required = true)
+                                        String userId,
+                            @ApiParam(name = "page", value = "查询下一页的第几页", required = false)
+                                        Integer page,
+                            @ApiParam(name = "pageSize", value = "分页的每一页显示的条数", required = false)
+                                        Integer pageSize) {
+        if(StringUtils.isBlank(userId)){
+            return JSONResult.errorMsg(null);
+        }
+        if(page == null){
+            page = 1;
+        }
+        if(pageSize == null){
+            pageSize = COMMON_PAGE_SIZE;
+        }
+        PagedGridResult orderTrend = myOrdersService.getOrderTrend(userId, pageSize, page);
+        return JSONResult.ok(orderTrend);
+    }
 }
 
