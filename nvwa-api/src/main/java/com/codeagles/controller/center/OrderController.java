@@ -2,8 +2,6 @@ package com.codeagles.controller.center;
 
 import com.codeagles.controller.BaseController;
 import com.codeagles.enums.EnumOrderStatus;
-import com.codeagles.pojo.Orders;
-import com.codeagles.service.center.MyOrdersService;
 import com.codeagles.utils.JSONResult;
 import com.codeagles.utils.PagedGridResult;
 import io.swagger.annotations.Api;
@@ -11,7 +9,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +25,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("myorders")
 public class OrderController extends BaseController {
 
-    @Autowired
-    private MyOrdersService myOrdersService;
 
     @ApiOperation(value = "我的订单列表", notes = "我的订单列表", httpMethod = "POST")
     @PostMapping("/query")
@@ -101,15 +96,6 @@ public class OrderController extends BaseController {
         return JSONResult.ok();
     }
 
-    //用于校验用户订单关联关系
-    private JSONResult checkUserOrder(String userId, String orderId){
-        Orders orders = myOrdersService.queryMyOrder(userId, orderId);
 
-        if(orders == null){
-            return JSONResult.errorMsg("订单不存在");
-        }
-        return JSONResult.ok();
-
-    }
 }
 

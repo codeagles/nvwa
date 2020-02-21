@@ -1,5 +1,9 @@
 package com.codeagles.controller;
 
+import com.codeagles.pojo.Orders;
+import com.codeagles.service.center.MyOrdersService;
+import com.codeagles.utils.JSONResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.io.File;
@@ -10,6 +14,9 @@ import java.io.File;
  **/
 @Controller
 public class BaseController {
+
+    @Autowired
+    public MyOrdersService myOrdersService;
 
     public static final Integer COMMON_PAGE_SIZE = 10;
     public static final Integer PAGE_SIZE = 20;
@@ -33,4 +40,15 @@ public class BaseController {
             File.separator +"foodie" +
             File.separator +"faces";
 
+
+    //用于校验用户订单关联关系
+    public JSONResult checkUserOrder(String userId, String orderId){
+        Orders orders = myOrdersService.queryMyOrder(userId, orderId);
+
+        if(orders == null){
+            return JSONResult.errorMsg("订单不存在");
+        }
+        return JSONResult.ok(orders);
+
+    }
 }

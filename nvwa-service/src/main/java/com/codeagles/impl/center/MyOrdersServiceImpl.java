@@ -11,7 +11,6 @@ import com.codeagles.service.center.MyOrdersService;
 import com.codeagles.utils.PagedGridResult;
 import com.codeagles.vo.MyOrdersVO;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -30,7 +29,7 @@ import java.util.Map;
  * @create 2020-01-03 10:12
  **/
 @Service
-public class MyOrdersServiceImpl implements MyOrdersService {
+public class MyOrdersServiceImpl extends BaseService implements MyOrdersService {
 
     @Autowired
     public OrderMapperCustom orderMapperCustom;
@@ -54,16 +53,6 @@ public class MyOrdersServiceImpl implements MyOrdersService {
         return this.setterPagedGrid(myOrdersVOS,page);
     }
 
-
-    private PagedGridResult setterPagedGrid( List<?> list,int page){
-        PageInfo<?> pageList = new PageInfo<>(list);
-        PagedGridResult grid = new PagedGridResult();
-        grid.setPage(page);
-        grid.setRows(list);
-        grid.setTotal(pageList.getPages());
-        grid.setRecords(pageList.getTotal());
-        return grid;
-    }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
