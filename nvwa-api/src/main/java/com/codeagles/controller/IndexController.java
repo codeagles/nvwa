@@ -6,17 +6,21 @@ import com.codeagles.pojo.Category;
 import com.codeagles.service.CarouselService;
 import com.codeagles.service.CategoryService;
 import com.codeagles.utils.JSONResult;
+import com.codeagles.utils.JsonUtils;
+import com.codeagles.utils.RedisOperator;
 import com.codeagles.vo.CategoryVO;
 import com.codeagles.vo.NewItemsVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,12 +38,30 @@ public class IndexController {
     private CarouselService carouselService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private RedisOperator redisOperator;
 
+
+    /**
+     * 缓存更改时机：
+     * 1. 后台运营系统，一旦广告发生更改，就可以 删除缓存，然后重置
+     * 2. 定时重置，比如每天0点重置
+     * 3. 每个轮播图都有可能是一个广告，每个广告都会有一个过期时间，过期了，再重置
+     * @return
+     */
     @ApiOperation(value = "获取首页轮播图列表", notes = "获取首页轮播图列表", httpMethod = "GET")
     @GetMapping("/carousel")
     public JSONResult carousel() {
+        List<Carousel> carousels = new ArrayList<>();
+        String carouselsStr = redisOperator.get("carousels");
+        if (StringUtils.isBlank(carouselsStr)) {
+            carousels = carouselService.queryAll(EnumYesOrNo.YES.type);
+            redisOperator.set("carousels", JsonUtils.objectToJson(carousels));
+        }else{
+            carousels = JsonUtils.jsonToList(carouselsStr, Carousel.class);
+        }
 
-        List<Carousel> carousels = carouselService.queryAll(EnumYesOrNo.YES.type);
+
         return JSONResult.ok(carousels);
     }
 
@@ -53,7 +75,14 @@ public class IndexController {
     @GetMapping("/cats")
     public JSONResult cats() {
 
-        List<Category> categories = categoryService.queryAllRootLevelCat();
+        List<Category> categories = new ArrayList<>();
+        String categoriesStr = redisOperator.get("categories");
+        if(StringUtils.isBlank(categoriesStr)){
+            categories = categoryService.queryAllRootLevelCat();
+            redisOperator.set("categories", JsonUtils.objectToJson(categories));
+        }else{
+          categories = JsonUtils.jsonToList(categoriesStr, Category.class);
+        }
         return JSONResult.ok(categories);
     }
 
@@ -66,7 +95,16 @@ public class IndexController {
         if(rootCatId == null){
             return JSONResult.errorMsg("分类id不存在");
         }
-        List<CategoryVO> categoryVOS = categoryService.getSubCatList(rootCatId);
+
+        List<CategoryVO> categoryVOS = new ArrayList<>();
+        String subCat = redisOperator.get("subCat");
+        if (StringUtils.isBlank(subCat)) {
+            categoryVOS = categoryService.getSubCatList(rootCatId);
+            redisOperator.set("subCat", JsonUtils.objectToJson(categoryVOS));
+        }else{
+            categoryVOS = JsonUtils.jsonToList(subCat, CategoryVO.class);
+        }
+
         return JSONResult.ok(categoryVOS);
     }
 
