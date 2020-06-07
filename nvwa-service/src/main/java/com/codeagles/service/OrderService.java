@@ -1,8 +1,11 @@
 package com.codeagles.service;
 
+import com.codeagles.bo.ShopcartBO;
 import com.codeagles.bo.SubmitOrderBo;
 import com.codeagles.pojo.OrderStatus;
 import com.codeagles.vo.OrderVO;
+
+import java.util.List;
 
 /**
  * 订单接口
@@ -13,8 +16,9 @@ public interface OrderService {
     /**
      * 用于创建订单相关信息
      * @param submitOrderBo
+     * @param shopcartBOList
      */
-    public OrderVO createOrder(SubmitOrderBo submitOrderBo);
+    public OrderVO createOrder(SubmitOrderBo submitOrderBo, List<ShopcartBO> shopcartBOList);
 
     /**
      * 修改订单

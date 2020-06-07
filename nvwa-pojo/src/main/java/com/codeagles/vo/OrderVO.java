@@ -1,6 +1,9 @@
 package com.codeagles.vo;
 
+import com.codeagles.bo.ShopcartBO;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,4 +19,6 @@ public class OrderVO {
     private String orderId;
 
     private MerchantOrdersVO merchantOrdersVO;
+
+    private List<ShopcartBO> toBeRemovedShopcatdList;
 }

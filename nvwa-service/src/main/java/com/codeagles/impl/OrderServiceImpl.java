@@ -1,5 +1,6 @@
 package com.codeagles.impl;
 
+import com.codeagles.bo.ShopcartBO;
 import com.codeagles.bo.SubmitOrderBo;
 import com.codeagles.enums.EnumOrderStatus;
 import com.codeagles.enums.EnumYesOrNo;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public OrderVO createOrder(SubmitOrderBo submitOrderBo) {
+    public OrderVO createOrder(SubmitOrderBo submitOrderBo, List<ShopcartBO> shopcartBOList) {
         String userId = submitOrderBo.getUserId();
         String addressId = submitOrderBo.getAddressId();
         String itemSpecIds = submitOrderBo.getItemSpecIds();
@@ -83,12 +85,15 @@ public class OrderServiceImpl implements OrderService {
         String[] itemSpecIdArr = itemSpecIds.split(",");
         Integer totalAmount = 0;//商品原价
         Integer realPayAmount = 0;//实际支付价格
-
+        List<ShopcartBO> toBeRemovedShopcatdList = new ArrayList<>();
         for (String itemSpecId : itemSpecIdArr) {
             //2.1 根据规格id，查询具体信息
             ItemsSpec itemsSpec = itemService.queryItemSpecById(itemSpecId);
-            //TODO 整合redis后，商品购买数量重新从redis的购物车中获取
-            int buyCounts = 1;
+            // 整合redis后，商品购买数量重新从redis的购物车中获取
+            ShopcartBO shopcart = getBuyCountsFromShopcart(shopcartBOList, itemSpecId);
+            int buyCounts = shopcart.getBuyCounts();
+            toBeRemovedShopcatdList.add(shopcart);
+
             totalAmount += itemsSpec.getPriceNormal() * buyCounts;//获取购物车商品数量
             realPayAmount += itemsSpec.getPriceDiscount() * buyCounts;
             //2.2 根据规格id 获得商品信息以及商品图片
@@ -131,6 +136,7 @@ public class OrderServiceImpl implements OrderService {
         OrderVO orderVO = new OrderVO();
         orderVO.setOrderId(orderId);
         orderVO.setMerchantOrdersVO(merchantOrdersVO);
+        orderVO.setToBeRemovedShopcatdList(toBeRemovedShopcatdList);
         return orderVO;
 
     }
@@ -185,5 +191,21 @@ public class OrderServiceImpl implements OrderService {
         orderStatus.setCloseTime(new Date());
         orderStatusMapper.updateByPrimaryKeySelective(orderStatus);
 
+    }
+
+    /**
+     *  从redis购物车中获取商品，为上述count服务
+     * @param list
+     * @param specId
+     * @return
+     */
+    private ShopcartBO getBuyCountsFromShopcart(List<ShopcartBO> list, String specId){
+
+        for (ShopcartBO shopcartBO : list) {
+            if (specId.equals(shopcartBO.getSpecId())) {
+                return shopcartBO;
+            }
+        }
+        return null;
     }
 }

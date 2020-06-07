@@ -97,10 +97,10 @@ public class IndexController {
         }
 
         List<CategoryVO> categoryVOS = new ArrayList<>();
-        String subCat = redisOperator.get("subCat");
+        String subCat = redisOperator.get("subCat:"+rootCatId);
         if (StringUtils.isBlank(subCat)) {
             categoryVOS = categoryService.getSubCatList(rootCatId);
-            redisOperator.set("subCat", JsonUtils.objectToJson(categoryVOS));
+            redisOperator.set("subCat:"+rootCatId, JsonUtils.objectToJson(categoryVOS));
         }else{
             categoryVOS = JsonUtils.jsonToList(subCat, CategoryVO.class);
         }
