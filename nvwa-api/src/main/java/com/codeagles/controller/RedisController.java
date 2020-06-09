@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Codeagles
@@ -49,5 +53,22 @@ public class RedisController {
         return "delete";
     }
 
+    /**
+     * 大量的KEY查询-对比写法
+     * @param keys
+     * @return
+     */
+    @GetMapping("getAlot")
+    public Object getAlot(String...keys){
+        //循环写法
+        List<String> result = new ArrayList<>();
+        for (String key : keys) {
+            result.add(redisOperator.get(key));
+        }
+        //批量查询
+        List<String> redisKeys = Arrays.asList(keys);
+        result = redisOperator.mget(redisKeys);
+        return result;
+    }
 
 }

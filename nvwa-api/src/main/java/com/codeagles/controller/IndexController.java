@@ -99,8 +99,19 @@ public class IndexController {
         List<CategoryVO> categoryVOS = new ArrayList<>();
         String subCat = redisOperator.get("subCat:"+rootCatId);
         if (StringUtils.isBlank(subCat)) {
+            /**
+             * 查询的Key在redis中不存在，
+             * 对应的id在数据库也不存在，
+             * 此时被非法用户进行攻击，大量请求直接打在DB上，造成宕机
+             * 这种现象称为缓存穿透。
+             * 解决方案：把空的数据也缓存起来，比如空字符串，空对象，空数组或list
+             */
             categoryVOS = categoryService.getSubCatList(rootCatId);
-            redisOperator.set("subCat:"+rootCatId, JsonUtils.objectToJson(categoryVOS));
+            if(categoryVOS != null && categoryVOS.size() >0){
+                redisOperator.set("subCat:"+rootCatId, JsonUtils.objectToJson(categoryVOS));
+            }else {
+                redisOperator.set("subCat:"+rootCatId, JsonUtils.objectToJson(categoryVOS),300);
+            }
         }else{
             categoryVOS = JsonUtils.jsonToList(subCat, CategoryVO.class);
         }
