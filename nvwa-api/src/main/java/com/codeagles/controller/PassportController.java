@@ -209,7 +209,7 @@ public class PassportController extends BaseController {
 
     @ApiOperation(value = "用户退出登录", notes = "用户退出登录", httpMethod = "POST")
     @PostMapping("/logout")
-    public JSONResult logout(@RequestBody String userId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public JSONResult logout(String userId, HttpServletRequest request, HttpServletResponse response) throws Exception {
         //清楚用户相关cookie
         CookieUtils.deleteCookie(request, response, "user");
     
