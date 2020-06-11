@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -69,6 +71,17 @@ public class RedisController {
         List<String> redisKeys = Arrays.asList(keys);
         result = redisOperator.mget(redisKeys);
         return result;
+    }
+
+
+    @GetMapping("set/session")
+    public String setSession(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.setAttribute("userInfo", "new User");
+        session.setMaxInactiveInterval(3600);
+        session.getAttribute("userInfo");
+        return "ok";
+
     }
 
 }

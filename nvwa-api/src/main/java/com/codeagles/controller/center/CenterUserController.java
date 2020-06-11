@@ -9,6 +9,7 @@ import com.codeagles.utils.CookieUtils;
 import com.codeagles.utils.DateUtils;
 import com.codeagles.utils.JSONResult;
 import com.codeagles.utils.JsonUtils;
+import com.codeagles.vo.UsersVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -63,9 +64,10 @@ public class CenterUserController extends BaseController {
         }
 
         Users users = centerUserService.updateUserInfo(userId,centerUsersBO);
-        users = setNullProperty(users);
-        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
-        //TODO 后续会增加令牌token，整合redis，分布式会话
+        //增加令牌token，整合redis，分布式会话
+        UsersVO usersVO = convertUsersVO(users);
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(usersVO), true);
+
         return JSONResult.ok();
     }
 
@@ -145,9 +147,9 @@ public class CenterUserController extends BaseController {
         String finalUserFaceUrl = imageServerUrl + uploadPathPrefix + "?t="+ DateUtils.getCurrentDateString(DateUtils.DATE_PATTERN);
         Users users = centerUserService.updateUserFace(userId, finalUserFaceUrl);
 
-        users = setNullProperty(users);
-        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(users), true);
-        //TODO 后续会增加令牌token，整合redis，分布式会话
+        //增加令牌token，整合redis，分布式会话
+        UsersVO usersVO = convertUsersVO(users);
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(usersVO), true);
 
         return JSONResult.ok();
     }

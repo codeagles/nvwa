@@ -9,7 +9,6 @@ import com.codeagles.vo.UsersVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 用户控制层
@@ -89,17 +87,6 @@ public class PassportController extends BaseController {
 
         return JSONResult.ok();
 
-    }
-
-    private UsersVO convertUsersVO(Users users){
-        //实现用户的redis会话
-        String uniqueToken = UUID.randomUUID().toString().trim();
-        redisOperator.set(REDIS_USER_TOKEN+":"+users.getId(),uniqueToken);
-
-        UsersVO usersVO = new UsersVO();
-        BeanUtils.copyProperties(users, usersVO);
-        usersVO.setUserUniqueToken(uniqueToken);
-        return usersVO;
     }
 
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
