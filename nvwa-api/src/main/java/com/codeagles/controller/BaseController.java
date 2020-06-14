@@ -1,12 +1,17 @@
 package com.codeagles.controller;
 
 import com.codeagles.pojo.Orders;
+import com.codeagles.pojo.Users;
 import com.codeagles.service.center.MyOrdersService;
 import com.codeagles.utils.JSONResult;
+import com.codeagles.utils.RedisOperator;
+import com.codeagles.vo.UsersVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.io.File;
+import java.util.UUID;
 
 /**
  * @author hcn
@@ -17,17 +22,16 @@ public class BaseController {
 
     @Autowired
     public MyOrdersService myOrdersService;
+    @Autowired
+    private RedisOperator redisOperator;
+
 
     public static final Integer COMMON_PAGE_SIZE = 10;
     public static final Integer PAGE_SIZE = 20;
     public static final String FOOD_SHOPCART = "shopcart";
+    public static final String REDIS_USER_TOKEN = "redis_user_token";
 
-    //支付中心的调用地址
-    String paymentUrl = "http://payment.t.mukewang.com/foodie-payment/payment/createMerchantOrder";
-    //微信支付成功-> 支付中心 -> 现在商户平台
-    //回调通知URL
-//    String payReturnUrl = "http://localhost:8080/orders/notifyMerchantOrderPaid";
-    String payReturnUrl = "http://7y76uq.natappfree.cc/orders/notifyMerchantOrderPaid";
+
 
 
     //用户上传头像的位置
@@ -50,5 +54,17 @@ public class BaseController {
         }
         return JSONResult.ok(orders);
 
+    }
+
+
+    public UsersVO convertUsersVO(Users users){
+        //实现用户的redis会话
+        String uniqueToken = UUID.randomUUID().toString().trim();
+        redisOperator.set(REDIS_USER_TOKEN+":"+users.getId(),uniqueToken);
+
+        UsersVO usersVO = new UsersVO();
+        BeanUtils.copyProperties(users, usersVO);
+        usersVO.setUserUniqueToken(uniqueToken);
+        return usersVO;
     }
 }
