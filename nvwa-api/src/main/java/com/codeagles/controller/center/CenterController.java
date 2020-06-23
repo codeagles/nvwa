@@ -33,11 +33,10 @@ public class CenterController {
     @GetMapping("userInfo")
     public JSONResult userInfo(
             @ApiParam(value = "用户id", name = "userId", required = true)
-            @RequestParam String userId){
+            @RequestParam String userId) {
         Users users = centerUserService.queryUserInfo(userId);
         return JSONResult.ok(users);
     }
-
 
 
 }

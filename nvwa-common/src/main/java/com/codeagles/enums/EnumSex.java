@@ -6,7 +6,7 @@ package com.codeagles.enums;
  * @author hcn
  * @create 2020-01-04 11:08
  **/
-public enum  EnumSex {
+public enum EnumSex {
 
     woman(0, "女"),
     man(1, "男"),
@@ -20,8 +20,6 @@ public enum  EnumSex {
         this.type = type;
         this.value = value;
     }
-
-
 
 
 }

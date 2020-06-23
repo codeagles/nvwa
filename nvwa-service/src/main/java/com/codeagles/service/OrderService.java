@@ -9,12 +9,13 @@ import java.util.List;
 
 /**
  * 订单接口
- * @author codeagles
  *
+ * @author codeagles
  */
 public interface OrderService {
     /**
      * 用于创建订单相关信息
+     *
      * @param submitOrderBo
      * @param shopcartBOList
      */
@@ -22,6 +23,7 @@ public interface OrderService {
 
     /**
      * 修改订单
+     *
      * @param orderId
      * @param orderStatus
      */
@@ -29,6 +31,7 @@ public interface OrderService {
 
     /**
      * 查询订单状态
+     *
      * @param orderId
      * @return
      */

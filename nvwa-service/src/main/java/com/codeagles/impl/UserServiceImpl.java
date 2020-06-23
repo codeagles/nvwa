@@ -40,10 +40,10 @@ public class UserServiceImpl implements UserSerivce {
     public boolean queryByUserName(String name) {
         Example example = new Example(Users.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("username",name);
+        criteria.andEqualTo("username", name);
         Users users = usersMapper.selectOneByExample(example);
 
-        return users == null?false:true;
+        return users == null ? false : true;
     }
 
 

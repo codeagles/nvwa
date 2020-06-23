@@ -16,7 +16,7 @@ import java.util.List;
 
 public class BaseService {
 
-    public PagedGridResult setterPagedGrid(List<?> list, int page){
+    public PagedGridResult setterPagedGrid(List<?> list, int page) {
         PageInfo<?> pageList = new PageInfo<>(list);
         PagedGridResult grid = new PagedGridResult();
         grid.setPage(page);

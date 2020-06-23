@@ -47,6 +47,7 @@ public class IndexController {
      * 1. 后台运营系统，一旦广告发生更改，就可以 删除缓存，然后重置
      * 2. 定时重置，比如每天0点重置
      * 3. 每个轮播图都有可能是一个广告，每个广告都会有一个过期时间，过期了，再重置
+     *
      * @return
      */
     @ApiOperation(value = "获取首页轮播图列表", notes = "获取首页轮播图列表", httpMethod = "GET")
@@ -57,7 +58,7 @@ public class IndexController {
         if (StringUtils.isBlank(carouselsStr)) {
             carousels = carouselService.queryAll(EnumYesOrNo.YES.type);
             redisOperator.set("carousels", JsonUtils.objectToJson(carousels));
-        }else{
+        } else {
             carousels = JsonUtils.jsonToList(carouselsStr, Carousel.class);
         }
 
@@ -77,11 +78,11 @@ public class IndexController {
 
         List<Category> categories = new ArrayList<>();
         String categoriesStr = redisOperator.get("categories");
-        if(StringUtils.isBlank(categoriesStr)){
+        if (StringUtils.isBlank(categoriesStr)) {
             categories = categoryService.queryAllRootLevelCat();
             redisOperator.set("categories", JsonUtils.objectToJson(categories));
-        }else{
-          categories = JsonUtils.jsonToList(categoriesStr, Category.class);
+        } else {
+            categories = JsonUtils.jsonToList(categoriesStr, Category.class);
         }
         return JSONResult.ok(categories);
     }
@@ -92,12 +93,12 @@ public class IndexController {
     public JSONResult subCat(
             @ApiParam(name = "rootCatId", value = "一级分类Id", required = true)
             @PathVariable Integer rootCatId) {
-        if(rootCatId == null){
+        if (rootCatId == null) {
             return JSONResult.errorMsg("分类id不存在");
         }
 
         List<CategoryVO> categoryVOS = new ArrayList<>();
-        String subCat = redisOperator.get("subCat:"+rootCatId);
+        String subCat = redisOperator.get("subCat:" + rootCatId);
         if (StringUtils.isBlank(subCat)) {
             /**
              * 查询的Key在redis中不存在，
@@ -107,12 +108,12 @@ public class IndexController {
              * 解决方案：把空的数据也缓存起来，比如空字符串，空对象，空数组或list
              */
             categoryVOS = categoryService.getSubCatList(rootCatId);
-            if(categoryVOS != null && categoryVOS.size() >0){
-                redisOperator.set("subCat:"+rootCatId, JsonUtils.objectToJson(categoryVOS));
-            }else {
-                redisOperator.set("subCat:"+rootCatId, JsonUtils.objectToJson(categoryVOS),300);
+            if (categoryVOS != null && categoryVOS.size() > 0) {
+                redisOperator.set("subCat:" + rootCatId, JsonUtils.objectToJson(categoryVOS));
+            } else {
+                redisOperator.set("subCat:" + rootCatId, JsonUtils.objectToJson(categoryVOS), 300);
             }
-        }else{
+        } else {
             categoryVOS = JsonUtils.jsonToList(subCat, CategoryVO.class);
         }
 
@@ -125,7 +126,7 @@ public class IndexController {
     public JSONResult sixNewItem(
             @ApiParam(name = "rootCatId", value = "一级分类Id", required = true)
             @PathVariable Integer rootCatId) {
-        if(rootCatId == null){
+        if (rootCatId == null) {
             return JSONResult.errorMsg("分类id不存在");
         }
         List<NewItemsVO> sixNewItemsLazy = categoryService.getSixNewItemsLazy(rootCatId);

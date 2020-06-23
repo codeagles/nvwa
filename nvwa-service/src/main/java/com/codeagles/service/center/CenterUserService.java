@@ -12,6 +12,7 @@ import com.codeagles.pojo.Users;
 public interface CenterUserService {
     /**
      * 根据用户id查询用户
+     *
      * @param userId
      * @return
      */
@@ -19,6 +20,7 @@ public interface CenterUserService {
 
     /**
      * 修改用户信息
+     *
      * @param userId
      * @param centerUsersBO
      * @return
@@ -27,6 +29,7 @@ public interface CenterUserService {
 
     /**
      * 用户头像更新
+     *
      * @param userId
      * @param faceUrl
      * @return

@@ -19,7 +19,7 @@ public class CustomExceptionHandler {
     //MaxUploadSizeExceededException
     //上传文件超过500K捕获异常
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public JSONResult handlerMaxUploadFile(MaxUploadSizeExceededException ex){
+    public JSONResult handlerMaxUploadFile(MaxUploadSizeExceededException ex) {
         return JSONResult.errorMsg("文件上传大小不能超过500k，请修改文件大小");
     }
 }

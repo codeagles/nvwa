@@ -5,6 +5,7 @@ import com.codeagles.vo.CategoryVO;
 import com.codeagles.vo.NewItemsVO;
 
 import java.util.List;
+
 /**
  * 分类 服务层
  *
@@ -20,7 +21,6 @@ public interface CategoryService {
 
     /**
      * 查询二级分类
-     *
      */
     public List<CategoryVO> getSubCatList(Integer rootCatId);
 

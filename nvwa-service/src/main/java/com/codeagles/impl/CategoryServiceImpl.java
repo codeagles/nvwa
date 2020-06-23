@@ -54,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
     public List<NewItemsVO> getSixNewItemsLazy(Integer rootCatId) {
-        Map<String ,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("rootCatId", rootCatId);
 
 

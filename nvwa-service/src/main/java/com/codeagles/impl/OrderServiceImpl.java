@@ -66,10 +66,10 @@ public class OrderServiceImpl implements OrderService {
         UserAddress userAddress = addressSerivce.queryUserAddress(userId, addressId);
         newOrder.setReceiverName(userAddress.getReceiver());
         newOrder.setReceiverMobile(userAddress.getMobile());
-        newOrder.setReceiverAddress(userAddress.getProvince()+" "
-                                    + userAddress.getCity()+" "
-                                    + userAddress.getDistrict()+" "
-                                    + userAddress.getDetail());
+        newOrder.setReceiverAddress(userAddress.getProvince() + " "
+                + userAddress.getCity() + " "
+                + userAddress.getDistrict() + " "
+                + userAddress.getDetail());
 
         newOrder.setPostAmount(postAomount);
         newOrder.setPayMethod(payMethod);
@@ -130,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
         MerchantOrdersVO merchantOrdersVO = new MerchantOrdersVO();
         merchantOrdersVO.setMerchantOrderId(orderId);
         merchantOrdersVO.setMerchantUserId(userId);
-        merchantOrdersVO.setAmount(realPayAmount+postAomount);
+        merchantOrdersVO.setAmount(realPayAmount + postAomount);
         merchantOrdersVO.setPayMethod(payMethod);
         //5. 构建自定义orderVO
         OrderVO orderVO = new OrderVO();
@@ -145,12 +145,12 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void updateOrderStatus(String orderId, Integer orderStatus) {
-       OrderStatus paidStatus = new OrderStatus();
-       paidStatus.setOrderId(orderId);
-       paidStatus.setOrderStatus(orderStatus);
-       paidStatus.setPayTime(new Date());
+        OrderStatus paidStatus = new OrderStatus();
+        paidStatus.setOrderId(orderId);
+        paidStatus.setOrderStatus(orderStatus);
+        paidStatus.setPayTime(new Date());
 
-       orderStatusMapper.updateByPrimaryKeySelective(paidStatus);
+        orderStatusMapper.updateByPrimaryKeySelective(paidStatus);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -175,7 +175,7 @@ public class OrderServiceImpl implements OrderService {
             Date createdTime = orderStatus.getCreatedTime();
             //和当前时间对比
             int days = DateUtils.daysBetween(createdTime, new Date());
-            if (days >=1) {
+            if (days >= 1) {
                 //超过一天，关闭订单
                 doCloseOrder(orderStatus.getOrderId());
             }
@@ -184,7 +184,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    void doCloseOrder(String orderId){
+    void doCloseOrder(String orderId) {
         OrderStatus orderStatus = new OrderStatus();
         orderStatus.setOrderId(orderId);
         orderStatus.setOrderStatus(EnumOrderStatus.CLOSE.type);
@@ -194,12 +194,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     *  从redis购物车中获取商品，为上述count服务
+     * 从redis购物车中获取商品，为上述count服务
+     *
      * @param list
      * @param specId
      * @return
      */
-    private ShopcartBO getBuyCountsFromShopcart(List<ShopcartBO> list, String specId){
+    private ShopcartBO getBuyCountsFromShopcart(List<ShopcartBO> list, String specId) {
 
         for (ShopcartBO shopcartBO : list) {
             if (specId.equals(shopcartBO.getSpecId())) {

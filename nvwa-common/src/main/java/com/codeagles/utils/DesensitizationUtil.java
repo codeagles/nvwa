@@ -5,10 +5,10 @@ import sun.applet.Main;
 /**
  * 通用脱敏工具类
  * 可用于：
- *      用户名
- *      手机号
- *      邮箱
- *      地址等
+ * 用户名
+ * 手机号
+ * 邮箱
+ * 地址等
  */
 public class DesensitizationUtil {
 
@@ -29,6 +29,7 @@ public class DesensitizationUtil {
 
     /**
      * 通用脱敏方法
+     *
      * @param value
      * @return
      */

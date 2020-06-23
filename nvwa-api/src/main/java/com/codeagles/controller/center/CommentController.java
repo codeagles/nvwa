@@ -42,10 +42,10 @@ public class CommentController extends BaseController {
             @RequestParam String userId,
             @ApiParam(name = "orderId", value = "订单id", required = true)
             @RequestParam String orderId
-    ){
+    ) {
         //判断用户是否和订单关联
-        JSONResult check = checkUserOrder(userId,orderId);
-        if(check.getStatus() != HttpStatus.OK.value()){
+        JSONResult check = checkUserOrder(userId, orderId);
+        if (check.getStatus() != HttpStatus.OK.value()) {
             return check;
         }
         //判断订单是否已经评价
@@ -68,17 +68,17 @@ public class CommentController extends BaseController {
             @RequestParam String orderId,
             @ApiParam(name = "commentList", value = "评论列表", required = true)
             @RequestBody List<OrderItemsCommentsBO> commentList
-    ){
+    ) {
         //判断用户是否和订单关联
-        JSONResult check = checkUserOrder(userId,orderId);
-        if(check.getStatus() != HttpStatus.OK.value()){
+        JSONResult check = checkUserOrder(userId, orderId);
+        if (check.getStatus() != HttpStatus.OK.value()) {
             return check;
         }
         //判断评论内容list不能为空
-        if (commentList == null || commentList.isEmpty() || commentList.size()==0) {
+        if (commentList == null || commentList.isEmpty() || commentList.size() == 0) {
             return JSONResult.errorMsg("评论内容不能为空");
         }
-        myCommentService.saveComments(orderId,userId,commentList);
+        myCommentService.saveComments(orderId, userId, commentList);
         return JSONResult.ok();
 
     }
@@ -93,14 +93,14 @@ public class CommentController extends BaseController {
             @RequestParam Integer page,
             @ApiParam(name = "pageSize", value = "每页的条数", required = true)
             @RequestParam Integer pageSize
-    ){
+    ) {
         if (StringUtils.isBlank(userId)) {
             return JSONResult.errorMsg(null);
         }
-        if(page == null){
+        if (page == null) {
             page = 1;
         }
-        if (pageSize == null){
+        if (pageSize == null) {
             pageSize = COMMON_PAGE_SIZE;
         }
         PagedGridResult pagedGridResult = myCommentService.querymyComments(userId, page, pageSize);

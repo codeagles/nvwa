@@ -18,6 +18,7 @@ public interface MyCommentService {
 
     /**
      * 根据订单id查询关联的商品
+     *
      * @param orderId
      * @return
      */
@@ -25,6 +26,7 @@ public interface MyCommentService {
 
     /**
      * 保存用户的评论
+     *
      * @param orderId
      * @param userId
      * @param commentsBOList
@@ -32,5 +34,5 @@ public interface MyCommentService {
     public void saveComments(String orderId, String userId, List<OrderItemsCommentsBO> commentsBOList);
 
 
-    public PagedGridResult querymyComments(String userId,int page, int pageSize);
+    public PagedGridResult querymyComments(String userId, int page, int pageSize);
 }

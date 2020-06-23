@@ -43,8 +43,8 @@ public class AddressServiceImpl implements AddressSerivce {
         Integer isDefault = 0;
         //1.判断当前用户是否存在地址，如果没有，则新增为'默认地址'
         List<UserAddress> userAddresses = this.queryAll(addressBO.getUserId());
-        if(userAddresses == null || userAddresses.isEmpty() || userAddresses.size() == 0){
-            isDefault =1;
+        if (userAddresses == null || userAddresses.isEmpty() || userAddresses.size() == 0) {
+            isDefault = 1;
         }
         //2. 保存数据导数据库
         String addressId = sid.nextShort();

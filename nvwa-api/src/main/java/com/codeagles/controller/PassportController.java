@@ -83,7 +83,7 @@ public class PassportController extends BaseController {
 
         CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(usersVO), true);
         // 同步购物车数据
-        synchShopcarData(users.getId(),request,response);
+        synchShopcarData(users.getId(), request, response);
 
         return JSONResult.ok();
 
@@ -114,11 +114,12 @@ public class PassportController extends BaseController {
         CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(usersVO), true);
 
         // 同步购物车数据
-        synchShopcarData(users.getId(),request,response);
+        synchShopcarData(users.getId(), request, response);
         return JSONResult.ok(users);
     }
+
     //注册登录成功后，同步cookie和redis的购物车数据
-    private void synchShopcarData(String userId,HttpServletRequest request, HttpServletResponse response){
+    private void synchShopcarData(String userId, HttpServletRequest request, HttpServletResponse response) {
         /**
          *  1、redis中无数据，如果cookie中的购物车为空，那么这个时候不作任何处理；
          *                  如果cookie中的购物车不为空，此时直接放入redis中
@@ -133,15 +134,15 @@ public class PassportController extends BaseController {
         String shopcartJsonRedis = redisOperator.get(FOOD_SHOPCART + ":" + userId);
 
         //从cookie中获取购物车
-        String shopcartStrCookie = CookieUtils.getCookieValue(request, FOOD_SHOPCART,true);
+        String shopcartStrCookie = CookieUtils.getCookieValue(request, FOOD_SHOPCART, true);
         if (StringUtils.isBlank(shopcartJsonRedis)) {
             //redis为空，cookie不为空，直接把cookie中的数据放入redis
             if (StringUtils.isNotBlank(shopcartStrCookie)) {
                 redisOperator.set(FOOD_SHOPCART + ":" + userId, shopcartStrCookie);
             }
-        }else{
+        } else {
             //redis不为空，cookie不为空，合并cookie和redis中购物车种的数据，若同一商品则覆盖redis
-            if(StringUtils.isNotBlank(shopcartStrCookie)){
+            if (StringUtils.isNotBlank(shopcartStrCookie)) {
                 /**
                  * 1. 已经存在的，把cookie中对应的数量，覆盖redis(参考京东)
                  * 2. 该项商品应标标记为待删除，统一放入一个待删除list中
@@ -158,7 +159,7 @@ public class PassportController extends BaseController {
 
                     for (ShopcartBO cookieShopcart : shopcartsCookie) {
                         String cookieSpectId = cookieShopcart.getSpecId();
-                        if(cookieSpectId.equals(redisSpecId)){
+                        if (cookieSpectId.equals(redisSpecId)) {
                             //覆盖购买数量，不累加
                             redisShopcart.setBuyCounts(cookieShopcart.getBuyCounts());
                             //把cookieShopcart放入待删除列表，用于最后的删除与合并
@@ -171,12 +172,12 @@ public class PassportController extends BaseController {
                 //合并两个list
                 shopcartsReids.addAll(shopcartsCookie);
                 //更新到redis和cookie
-                CookieUtils.setCookie(request,response,FOOD_SHOPCART,JsonUtils.objectToJson(shopcartsReids),true);
+                CookieUtils.setCookie(request, response, FOOD_SHOPCART, JsonUtils.objectToJson(shopcartsReids), true);
                 redisOperator.set(FOOD_SHOPCART + ":" + userId, JsonUtils.objectToJson(shopcartsReids));
 
-            }else{
+            } else {
                 //redis不为空，cookie为空，直接把redis覆盖cookie
-                CookieUtils.setCookie(request,response,FOOD_SHOPCART,shopcartJsonRedis,true);
+                CookieUtils.setCookie(request, response, FOOD_SHOPCART, shopcartJsonRedis, true);
             }
         }
 
@@ -199,12 +200,12 @@ public class PassportController extends BaseController {
     public JSONResult logout(String userId, HttpServletRequest request, HttpServletResponse response) throws Exception {
         //清楚用户相关cookie
         CookieUtils.deleteCookie(request, response, "user");
-    
+
         //用户退出登录，需要清空购物车
         CookieUtils.deleteCookie(request, response, FOOD_SHOPCART);
 
         //分布式会话中需要清除用户数据
-        redisOperator.del(REDIS_USER_TOKEN +":"+userId);
+        redisOperator.del(REDIS_USER_TOKEN + ":" + userId);
         return JSONResult.ok();
     }
 }

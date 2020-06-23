@@ -40,13 +40,13 @@ public class OrderController extends BaseController {
                     Integer pageSize) {
 
 
-        if(StringUtils.isBlank(userId)){
+        if (StringUtils.isBlank(userId)) {
             return JSONResult.errorMsg(null);
         }
-        if(page == null){
+        if (page == null) {
             page = 1;
         }
-        if(pageSize == null){
+        if (pageSize == null) {
             pageSize = COMMON_PAGE_SIZE;
         }
 
@@ -70,13 +70,13 @@ public class OrderController extends BaseController {
     @ApiOperation(value = "确认收货", notes = "确认收货", httpMethod = "POST")
     public JSONResult confirmReveive(@RequestParam String orderId, @RequestParam String userId) {
 
-        JSONResult check = checkUserOrder(userId,orderId);
-        if(check.getStatus() != HttpStatus.OK.value()){
+        JSONResult check = checkUserOrder(userId, orderId);
+        if (check.getStatus() != HttpStatus.OK.value()) {
             return check;
         }
 
         boolean res = myOrdersService.updateReceiveOrderStatus(orderId);
-        if(!res){
+        if (!res) {
             return JSONResult.errorMsg("订单确认收货失败");
         }
         return JSONResult.ok();
@@ -85,13 +85,13 @@ public class OrderController extends BaseController {
     @PostMapping("delete")
     @ApiOperation(value = "删除订单", notes = "删除订单", httpMethod = "POST")
     public JSONResult delete(@RequestParam String orderId, @RequestParam String userId) {
-        JSONResult check = checkUserOrder(userId,orderId);
-        if(check.getStatus() != HttpStatus.OK.value()){
+        JSONResult check = checkUserOrder(userId, orderId);
+        if (check.getStatus() != HttpStatus.OK.value()) {
             return check;
         }
 
-        boolean res = myOrdersService.deleteOrder(userId,orderId);
-        if(!res){
+        boolean res = myOrdersService.deleteOrder(userId, orderId);
+        if (!res) {
             return JSONResult.errorMsg("订单删除失败");
         }
         return JSONResult.ok();
@@ -101,7 +101,7 @@ public class OrderController extends BaseController {
     @PostMapping("statusCounts")
     @ApiOperation(value = "渲染订单数", notes = "渲染订单数", httpMethod = "POST")
     public JSONResult statusCounts(@RequestParam String userId) {
-        if(StringUtils.isBlank(userId)){
+        if (StringUtils.isBlank(userId)) {
             return JSONResult.errorMsg(null);
         }
         OrderStatusCountVO orderStatusCounts = myOrdersService.getOrderStatusCounts(userId);
@@ -111,18 +111,18 @@ public class OrderController extends BaseController {
     @PostMapping("trend")
     @ApiOperation(value = "订单动向详情", notes = "订单动向详情", httpMethod = "POST")
     public JSONResult trend(@ApiParam(name = "userId", value = "用户id", required = true)
-                                        String userId,
+                                    String userId,
                             @ApiParam(name = "page", value = "查询下一页的第几页", required = false)
-                                        Integer page,
+                                    Integer page,
                             @ApiParam(name = "pageSize", value = "分页的每一页显示的条数", required = false)
-                                        Integer pageSize) {
-        if(StringUtils.isBlank(userId)){
+                                    Integer pageSize) {
+        if (StringUtils.isBlank(userId)) {
             return JSONResult.errorMsg(null);
         }
-        if(page == null){
+        if (page == null) {
             page = 1;
         }
-        if(pageSize == null){
+        if (pageSize == null) {
             pageSize = COMMON_PAGE_SIZE;
         }
         PagedGridResult orderTrend = myOrdersService.getOrderTrend(userId, pageSize, page);

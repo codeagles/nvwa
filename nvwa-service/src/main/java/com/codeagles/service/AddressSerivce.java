@@ -17,18 +17,21 @@ public interface AddressSerivce {
 
     /**
      * 新增收货人地址
+     *
      * @param addressVO
      */
     public void addNewUserAddress(AddressBO addressVO);
 
     /**
      * 修改收货人地址
+     *
      * @param addressVO
      */
     public void updateUserAddress(AddressBO addressVO);
 
     /**
      * 删除地址 根据用户id与地址id
+     *
      * @param userId
      * @param addressId
      */
@@ -36,6 +39,7 @@ public interface AddressSerivce {
 
     /**
      * 根据用户id与地址id 修改地址为默认地址
+     *
      * @param userId
      * @param addressId
      */

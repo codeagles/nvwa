@@ -20,7 +20,7 @@ public class CorsConfig {
     }
 
     @Bean
-    public CorsFilter corsFilter(){
+    public CorsFilter corsFilter() {
         //1.添加cors配置信息
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:8080");

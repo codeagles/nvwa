@@ -21,15 +21,15 @@ import java.io.OutputStream;
  * Time: 9:35 下午
  * <p>
  * Description: 用户权限拦截器
- *
  */
-public class UserTokenInterceptor extends BaseController implements HandlerInterceptor  {
+public class UserTokenInterceptor extends BaseController implements HandlerInterceptor {
 
     @Autowired
     private RedisOperator redisOperator;
 
     /**
      * 拦截请求 在访问controller调用之前
+     *
      * @param request
      * @param response
      * @param handler
@@ -45,26 +45,26 @@ public class UserTokenInterceptor extends BaseController implements HandlerInter
         String userToken = request.getHeader("headerUserToken");
         String userId = request.getHeader("headerUserId");
 
-        if(StringUtils.isNotBlank(userId)&& StringUtils.isNotBlank(userToken)){
+        if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(userToken)) {
 
-            String uniqueToken = redisOperator.get(REDIS_USER_TOKEN+":"+userId);
-            if(StringUtils.isBlank(uniqueToken)){
+            String uniqueToken = redisOperator.get(REDIS_USER_TOKEN + ":" + userId);
+            if (StringUtils.isBlank(uniqueToken)) {
                 returErrorResponse(response, JSONResult.errorMsg("请登录！"));
                 return false;
-            }else{
-              if(!uniqueToken.equals(userToken)){
-                  returErrorResponse(response, JSONResult.errorMsg("账号可能在异地登录！！"));
-                  return false;
-              }
+            } else {
+                if (!uniqueToken.equals(userToken)) {
+                    returErrorResponse(response, JSONResult.errorMsg("账号可能在异地登录！！"));
+                    return false;
+                }
             }
-        }else{
+        } else {
             returErrorResponse(response, JSONResult.errorMsg("请登录！"));
             return false;
         }
         return true;
     }
 
-    public void returErrorResponse(HttpServletResponse response, JSONResult jsonResult){
+    public void returErrorResponse(HttpServletResponse response, JSONResult jsonResult) {
         OutputStream outputStream = null;
         try {
             response.setCharacterEncoding("utf-8");
@@ -74,8 +74,8 @@ public class UserTokenInterceptor extends BaseController implements HandlerInter
             outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            if(outputStream != null){
+        } finally {
+            if (outputStream != null) {
                 try {
                     outputStream.close();
                 } catch (IOException e) {
@@ -85,9 +85,10 @@ public class UserTokenInterceptor extends BaseController implements HandlerInter
 
         }
     }
-    
+
     /**
      * 请求访问controller之后渲染视图之前
+     *
      * @param request
      * @param response
      * @param handler
@@ -101,6 +102,7 @@ public class UserTokenInterceptor extends BaseController implements HandlerInter
 
     /**
      * 请求访问controller之后，渲染视图之后
+     *
      * @param request
      * @param response
      * @param handler

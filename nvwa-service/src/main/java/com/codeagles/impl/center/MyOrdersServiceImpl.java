@@ -45,13 +45,13 @@ public class MyOrdersServiceImpl extends BaseService implements MyOrdersService 
     public PagedGridResult queryMyOrder(String userId, Integer orderStatus, Integer pageSize, Integer page) {
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("userId", userId);
-        if(orderStatus != null){
+        if (orderStatus != null) {
             paramsMap.put("orderStatus", orderStatus);
         }
         PageHelper.startPage(page, pageSize);
         List<MyOrdersVO> myOrdersVOS = orderMapperCustom.queryMyOrders(paramsMap);
 
-        return this.setterPagedGrid(myOrdersVOS,page);
+        return this.setterPagedGrid(myOrdersVOS, page);
     }
 
 
@@ -94,7 +94,7 @@ public class MyOrdersServiceImpl extends BaseService implements MyOrdersService 
         Example example = new Example(OrderStatus.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("orderId", orderId);
-        criteria.andEqualTo("orderStatus",EnumOrderStatus.WAIT_RECEIVE.type);
+        criteria.andEqualTo("orderStatus", EnumOrderStatus.WAIT_RECEIVE.type);
         int i = orderStatusMapper.updateByExampleSelective(orderStatus, example);
         return i == 1 ? true : false;
     }
@@ -109,7 +109,7 @@ public class MyOrdersServiceImpl extends BaseService implements MyOrdersService 
         Example example = new Example(Orders.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("id", orderId);
-        criteria.andEqualTo("userId",userId);
+        criteria.andEqualTo("userId", userId);
         int i = ordersMapper.updateByExampleSelective(updateOrder, example);
         return i == 1 ? true : false;
     }
@@ -118,7 +118,7 @@ public class MyOrdersServiceImpl extends BaseService implements MyOrdersService 
     @Override
     public OrderStatusCountVO getOrderStatusCounts(String userId) {
 
-        Map<String , Object> paramsMap = new HashMap<>();
+        Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("userId", userId);
         paramsMap.put("orderStatus", EnumOrderStatus.WAIT_PAY.type);
         int waitPayCount = orderMapperCustom.getMyOrderStatusCounts(paramsMap);
@@ -133,7 +133,7 @@ public class MyOrdersServiceImpl extends BaseService implements MyOrdersService 
         paramsMap.put("isComment", EnumYesOrNo.NO.type);
         int waitCommentCount = orderMapperCustom.getMyOrderStatusCounts(paramsMap);
 
-        OrderStatusCountVO countVO = new OrderStatusCountVO(waitPayCount,waitDeliverCount,waitReceiveCount,waitCommentCount);
+        OrderStatusCountVO countVO = new OrderStatusCountVO(waitPayCount, waitDeliverCount, waitReceiveCount, waitCommentCount);
         return countVO;
     }
 

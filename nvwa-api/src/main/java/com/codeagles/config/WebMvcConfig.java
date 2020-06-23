@@ -22,7 +22,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder){
+    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
         return restTemplateBuilder.build();
     }
 
@@ -36,7 +36,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public UserTokenInterceptor userTokenInterceptor(){
+    public UserTokenInterceptor userTokenInterceptor() {
         return new UserTokenInterceptor();
     }
 

@@ -63,7 +63,7 @@ public class OrdersController extends BaseController {
         List<ShopcartBO> shopcartBOList = JsonUtils.jsonToList(shopcartJson, ShopcartBO.class);
 
         //1.创建订单
-        OrderVO order = orderService.createOrder(submitOrderBo,shopcartBOList);
+        OrderVO order = orderService.createOrder(submitOrderBo, shopcartBOList);
         String orderId = order.getOrderId();
         //2.创建订单以后，移除购物车中已结算(已提交)的商品
         /**
@@ -74,7 +74,7 @@ public class OrdersController extends BaseController {
          */
         //清理覆盖现有购物车中的redis汇总购物信息
         shopcartBOList.removeAll(order.getToBeRemovedShopcatdList());
-        redisOperator.set(FOOD_SHOPCART+":"+ submitOrderBo.getUserId(),JsonUtils.objectToJson(shopcartBOList));
+        redisOperator.set(FOOD_SHOPCART + ":" + submitOrderBo.getUserId(), JsonUtils.objectToJson(shopcartBOList));
         //整合redis之后，完善购物车中的已结算商品，并且需要同步到前端的cookie
         CookieUtils.setCookie(request, response, FOOD_SHOPCART, JsonUtils.objectToJson(shopcartBOList), true);
 

@@ -56,14 +56,14 @@ public class CenterUserController extends BaseController {
             BindingResult bindingResult,
             HttpServletRequest request, HttpServletResponse response
 
-            ){
+    ) {
         //判断BindingResult是否有保存错误信息，如果有，直接return
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             Map<String, String> errors = getErrors(bindingResult);
             return JSONResult.errorMap(errors);
         }
 
-        Users users = centerUserService.updateUserInfo(userId,centerUsersBO);
+        Users users = centerUserService.updateUserInfo(userId, centerUsersBO);
         //增加令牌token，整合redis，分布式会话
         UsersVO usersVO = convertUsersVO(users);
         CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(usersVO), true);
@@ -80,7 +80,7 @@ public class CenterUserController extends BaseController {
                     MultipartFile file,
             HttpServletRequest request, HttpServletResponse response
 
-    ){
+    ) {
         //定义头像保存地址
 //        String fileSpace = IMAGE_USER_FACE_LOCATION;
         String fileSpace = fileUpload.getImageUserFaceLocation();
@@ -100,20 +100,20 @@ public class CenterUserController extends BaseController {
                     String[] split = fileName.split("\\.");
                     String suffix = split[split.length - 1];
 
-                    if(!suffix.equalsIgnoreCase("png")&&
-                            !suffix.equalsIgnoreCase("jpg")&&
-                            !suffix.equalsIgnoreCase("jpeg")){
+                    if (!suffix.equalsIgnoreCase("png") &&
+                            !suffix.equalsIgnoreCase("jpg") &&
+                            !suffix.equalsIgnoreCase("jpeg")) {
                         return JSONResult.errorMsg("图片格式不正确");
                     }
                     //文件名重组 覆盖式上传， 增量式：额外拼接当前时间
-                    String newFileName = "face-"+userId+"."+suffix;
+                    String newFileName = "face-" + userId + "." + suffix;
 
                     //上传的头像最终保存的位置
                     String finalFilePath = fileSpace + uploadPathPrefix + File.separator + newFileName;
                     //用于提供给web服务的地址
-                    uploadPathPrefix  += ("/" + newFileName);
+                    uploadPathPrefix += ("/" + newFileName);
                     File outFile = new File(finalFilePath);
-                    if(outFile.getParentFile() != null){
+                    if (outFile.getParentFile() != null) {
                         //创建文件夹
                         outFile.getParentFile().mkdirs();
                     }
@@ -125,7 +125,7 @@ public class CenterUserController extends BaseController {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 try {
                     if (fileOutputStream != null) {
                         fileOutputStream.flush();
@@ -137,14 +137,14 @@ public class CenterUserController extends BaseController {
             }
 
 
-        }else {
+        } else {
             return JSONResult.errorMsg("文件不能为空");
         }
 
         //更新用户头像到数据库
         String imageServerUrl = fileUpload.getImageServerUrl();
         //由于浏览器可能存在缓存，所以增加时间戳来保证更新后的图片及时刷新
-        String finalUserFaceUrl = imageServerUrl + uploadPathPrefix + "?t="+ DateUtils.getCurrentDateString(DateUtils.DATE_PATTERN);
+        String finalUserFaceUrl = imageServerUrl + uploadPathPrefix + "?t=" + DateUtils.getCurrentDateString(DateUtils.DATE_PATTERN);
         Users users = centerUserService.updateUserFace(userId, finalUserFaceUrl);
 
         //增加令牌token，整合redis，分布式会话
@@ -155,10 +155,7 @@ public class CenterUserController extends BaseController {
     }
 
 
-
-
-
-    private Map<String, String> getErrors(BindingResult bindingResult){
+    private Map<String, String> getErrors(BindingResult bindingResult) {
 
         Map<String, String> errorMap = new HashMap<>();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();

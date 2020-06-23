@@ -31,7 +31,7 @@ import java.util.List;
 @Api(value = "商品接口", tags = {"商品信息展示的相关接口"})
 @RestController
 @RequestMapping(("/items"))
-public class ItemsController extends  BaseController {
+public class ItemsController extends BaseController {
 
     @Autowired
     private ItemService itemService;
@@ -44,7 +44,7 @@ public class ItemsController extends  BaseController {
             @PathVariable String itemId) {
 
 
-        if(StringUtils.isBlank(itemId)){
+        if (StringUtils.isBlank(itemId)) {
             return JSONResult.errorMsg("分类id不能为空");
         }
 
@@ -63,15 +63,14 @@ public class ItemsController extends  BaseController {
     }
 
 
-
     @ApiOperation(value = "查询商品评价等级", notes = "查询商品评价等级", httpMethod = "GET")
     @GetMapping("/commentLevel")
     public JSONResult commentLevel(
             @ApiParam(name = "itemId", value = "商品id", required = true)
-            String itemId) {
+                    String itemId) {
 
 
-        if(StringUtils.isBlank(itemId)){
+        if (StringUtils.isBlank(itemId)) {
             return JSONResult.errorMsg("分类id不能为空");
         }
         CommentLevelCountVO commentLevelCountVO = itemService.queryCommentCounts(itemId);
@@ -92,13 +91,13 @@ public class ItemsController extends  BaseController {
                     Integer pageSize) {
 
 
-        if(StringUtils.isBlank(itemId)){
+        if (StringUtils.isBlank(itemId)) {
             return JSONResult.errorMsg("分类id不能为空");
         }
-        if(page == null){
+        if (page == null) {
             page = 1;
         }
-        if(pageSize == null){
+        if (pageSize == null) {
             pageSize = COMMON_PAGE_SIZE;
         }
 
@@ -119,13 +118,13 @@ public class ItemsController extends  BaseController {
                     Integer pageSize) {
 
 
-        if(StringUtils.isBlank(keywords)){
+        if (StringUtils.isBlank(keywords)) {
             return JSONResult.errorMsg(null);
         }
-        if(page == null){
+        if (page == null) {
             page = 1;
         }
-        if(pageSize == null){
+        if (pageSize == null) {
             pageSize = PAGE_SIZE;
         }
 
@@ -147,13 +146,13 @@ public class ItemsController extends  BaseController {
                     Integer pageSize) {
 
 
-        if(catId ==null){
+        if (catId == null) {
             return JSONResult.errorMsg(null);
         }
-        if(page == null){
+        if (page == null) {
             page = 1;
         }
-        if(pageSize == null){
+        if (pageSize == null) {
             pageSize = PAGE_SIZE;
         }
 
@@ -163,6 +162,7 @@ public class ItemsController extends  BaseController {
 
     /**
      * 用于用户长时间未登录网站，刷新购物车中的数据，主要是商品价格
+     *
      * @param itemSpecIds
      * @return
      */
@@ -171,9 +171,9 @@ public class ItemsController extends  BaseController {
     public JSONResult refresh(
             @ApiParam(name = "itemSpecIds", value = "规格分类ids", required = true, example = "1001,1002,1003")
                     String itemSpecIds
-          ) {
+    ) {
 
-        if(StringUtils.isBlank(itemSpecIds)){
+        if (StringUtils.isBlank(itemSpecIds)) {
             return JSONResult.ok();
         }
         List<ShopcartVO> shopcartVOS = itemService.queryItemsBySpecIds(itemSpecIds);

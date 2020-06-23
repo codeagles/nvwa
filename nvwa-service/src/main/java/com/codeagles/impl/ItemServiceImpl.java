@@ -86,9 +86,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentLevelCountVO queryCommentCounts(String itemId) {
 
-        Integer goodCounts  = getCommentsCounts(itemId, EnumCommentLevel.GOOD.type);
-        Integer normalCounts  = getCommentsCounts(itemId, EnumCommentLevel.NORMAL.type);
-        Integer badCounts  = getCommentsCounts(itemId, EnumCommentLevel.BAD.type);
+        Integer goodCounts = getCommentsCounts(itemId, EnumCommentLevel.GOOD.type);
+        Integer normalCounts = getCommentsCounts(itemId, EnumCommentLevel.NORMAL.type);
+        Integer badCounts = getCommentsCounts(itemId, EnumCommentLevel.BAD.type);
         Integer totalCounts = goodCounts + normalCounts + badCounts;
         CommentLevelCountVO commentLevelCountVO = new CommentLevelCountVO();
         commentLevelCountVO.setGoodCounts(goodCounts);
@@ -100,10 +100,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
-    Integer getCommentsCounts(String itemId, Integer level){
+    Integer getCommentsCounts(String itemId, Integer level) {
         ItemsComments condition = new ItemsComments();
         condition.setItemId(itemId);
-        if(level != null){
+        if (level != null) {
             condition.setCommentLevel(level);
         }
         return itemsCommentsMapper.selectCount(condition);
@@ -112,14 +112,14 @@ public class ItemServiceImpl implements ItemService {
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
     public PagedGridResult queryPagedItemComments(String itemId, Integer commentLevel, Integer page, Integer pageSize) {
-        Map<String , Object> paramsMap = new HashMap<>();
-        paramsMap.put("itemId",itemId);
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("itemId", itemId);
         paramsMap.put("level", commentLevel);
 
 
-        PageHelper.startPage(page,pageSize);
+        PageHelper.startPage(page, pageSize);
         List<ItemCommentVO> itemCommentVOS = itemsMapperCustom.queryItemComments(paramsMap);
-        PagedGridResult pagedGridResult = this.setterPagedGrid(itemCommentVOS,page);
+        PagedGridResult pagedGridResult = this.setterPagedGrid(itemCommentVOS, page);
 
         for (ItemCommentVO itemCommentVO : itemCommentVOS) {
             itemCommentVO.setNickname(DesensitizationUtil.commonDisplay(itemCommentVO.getNickname()));
@@ -129,7 +129,7 @@ public class ItemServiceImpl implements ItemService {
 
     }
 
-    private PagedGridResult setterPagedGrid( List<?> list,int page){
+    private PagedGridResult setterPagedGrid(List<?> list, int page) {
         PageInfo<?> pageList = new PageInfo<>(list);
         PagedGridResult grid = new PagedGridResult();
         grid.setPage(page);
@@ -143,28 +143,28 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public PagedGridResult searchItems(String keywords, String sort, Integer page, Integer pageSize) {
 
-        Map<String , Object> paramsMap = new HashMap<>();
-        paramsMap.put("keywords",keywords);
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("keywords", keywords);
         paramsMap.put("sort", sort);
 
 
-        PageHelper.startPage(page,pageSize);
+        PageHelper.startPage(page, pageSize);
         List<SearchItemVO> searchItemVOS = itemsMapperCustom.searchItems(paramsMap);
 
-        return this.setterPagedGrid(searchItemVOS,page);
+        return this.setterPagedGrid(searchItemVOS, page);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
     public PagedGridResult searchItems(Integer catId, String sort, Integer page, Integer pageSize) {
 
-        Map<String , Object> paramsMap = new HashMap<>();
-        paramsMap.put("catId",catId);
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("catId", catId);
         paramsMap.put("sort", sort);
-        PageHelper.startPage(page,pageSize);
+        PageHelper.startPage(page, pageSize);
         List<SearchItemVO> searchItemVOS = itemsMapperCustom.searchItemsByThirdCat(paramsMap);
 
-        return this.setterPagedGrid(searchItemVOS,page);
+        return this.setterPagedGrid(searchItemVOS, page);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -172,7 +172,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ShopcartVO> queryItemsBySpecIds(String specIds) {
         String[] ids = specIds.split(",");
         List<String> specIdsList = new ArrayList<>();
-        Collections.addAll(specIdsList,ids);
+        Collections.addAll(specIdsList, ids);
         return itemsMapperCustom.queryItemsBySpecIds(specIdsList);
     }
 
@@ -207,8 +207,8 @@ public class ItemServiceImpl implements ItemService {
          */
 
         int result = itemsMapperCustom.decreaseItemSpecStock(specId, buyCounts);
-        if(result != 1){
-            throw  new RuntimeException("订单创建失败！库存不足！");
+        if (result != 1) {
+            throw new RuntimeException("订单创建失败！库存不足！");
 
         }
     }

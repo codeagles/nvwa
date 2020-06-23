@@ -32,16 +32,16 @@ public class RedisController {
     private RedisTemplate redisTemplate;
 
     @GetMapping("set")
-    public Object set(String key,String value){
+    public Object set(String key, String value) {
 //        redisTemplate.opsForValue().set(key,value);
-        redisOperator.set(key,value);
+        redisOperator.set(key, value);
         return "success";
 
     }
 
 
     @GetMapping("get")
-    public Object get(String key){
+    public Object get(String key) {
 //        Object o = redisTemplate.opsForValue().get(key);
 
         return redisOperator.get(key);
@@ -49,7 +49,7 @@ public class RedisController {
     }
 
     @GetMapping("delete")
-    public Object delete(String key){
+    public Object delete(String key) {
 //        redisTemplate.delete(key);
         redisOperator.del(key);
         return "delete";
@@ -57,11 +57,12 @@ public class RedisController {
 
     /**
      * 大量的KEY查询-对比写法
+     *
      * @param keys
      * @return
      */
     @GetMapping("getAlot")
-    public Object getAlot(String...keys){
+    public Object getAlot(String... keys) {
         //循环写法
         List<String> result = new ArrayList<>();
         for (String key : keys) {
@@ -75,7 +76,7 @@ public class RedisController {
 
 
     @GetMapping("set/session")
-    public String setSession(HttpServletRequest request){
+    public String setSession(HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute("userInfo", "new User");
         session.setMaxInactiveInterval(3600);

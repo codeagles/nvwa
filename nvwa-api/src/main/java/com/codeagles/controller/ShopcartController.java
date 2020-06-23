@@ -47,22 +47,22 @@ public class ShopcartController extends BaseController {
         // 需要判断当前购物车中的商品包含已经存在的商品，如果存在则累加购买数量
         String shopcartJson = redisOperator.get(FOOD_SHOPCART + ":" + userId);
         List<ShopcartBO> shopcartBOList = null;
-        if(StringUtils.isNotBlank(shopcartJson)){
+        if (StringUtils.isNotBlank(shopcartJson)) {
             //redis中已经有购物车了
             shopcartBOList = JsonUtils.jsonToList(shopcartJson, ShopcartBO.class);
             //判断购物车中商品是否已经存在，如果有的话counts累加
             boolean isHaving = false;
             for (ShopcartBO bo : shopcartBOList) {
                 String temSpecId = bo.getSpecId();
-                if(temSpecId.equals(shopcartBO.getSpecId())){
-                    bo.setBuyCounts(bo.getBuyCounts()+shopcartBO.getBuyCounts());
+                if (temSpecId.equals(shopcartBO.getSpecId())) {
+                    bo.setBuyCounts(bo.getBuyCounts() + shopcartBO.getBuyCounts());
                     isHaving = true;
                 }
             }
-            if(!isHaving){
+            if (!isHaving) {
                 shopcartBOList.add(shopcartBO);
             }
-        }else {
+        } else {
             //没有购物车 创建一个
             shopcartBOList = new ArrayList<>();
             //将商品直接添加进购物车
@@ -93,7 +93,7 @@ public class ShopcartController extends BaseController {
             List<ShopcartBO> shopcartBOList = JsonUtils.jsonToList(shopcartJson, ShopcartBO.class);
             for (ShopcartBO shopcartBO : shopcartBOList) {
                 String temSpectId = shopcartBO.getSpecId();
-                if(temSpectId.equals(itemSpecId)){
+                if (temSpectId.equals(itemSpecId)) {
                     shopcartBOList.remove(shopcartBO);
                     break;
                 }

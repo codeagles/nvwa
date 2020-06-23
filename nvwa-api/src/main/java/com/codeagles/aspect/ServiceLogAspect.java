@@ -38,6 +38,7 @@ public class ServiceLogAspect {
      * 第三处 .. 代表该包以及其子包下的所有类方法
      * 第四处 * 代表类名 *代表所有类
      * 第五处 *（..） *代表类种的方法名，（..）表示方法中的任何参数
+     *
      * @param joinPoint
      * @return
      * @throws Throwable
@@ -55,11 +56,11 @@ public class ServiceLogAspect {
 
         long takeTime = endTime - startTime;
 
-        if(takeTime > 3000){
+        if (takeTime > 3000) {
             log.error("=======执行结束时间:{} 毫秒", takeTime);
-        }else if(takeTime > 2000){
+        } else if (takeTime > 2000) {
             log.warn("=======执行结束时间:{} 毫秒", takeTime);
-        }else{
+        } else {
             log.info("=======执行结束时间:{} 毫秒", takeTime);
         }
 
