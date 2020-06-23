@@ -36,7 +36,7 @@ public class CenterUsersBO {
     @Length(max = 12, message = "昵称不能超过12位")
     @ApiModelProperty(value = "真实姓名", name = "realname", example = "张三", required = false)
     private String realname;
-//    @ApiModelProperty(value = "", name = "coxnfirmPassword", example = "000000", required = false)
+    //    @ApiModelProperty(value = "", name = "coxnfirmPassword", example = "000000", required = false)
 //    private String face;
     @Pattern(regexp = "^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\\d{8})$", message = "电话号码格式不正确")
     @ApiModelProperty(value = "手机号码", name = "mobile", example = "13911111111", required = false)

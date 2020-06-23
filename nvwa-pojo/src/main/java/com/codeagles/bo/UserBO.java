@@ -10,7 +10,7 @@ import lombok.Data;
  * @author hcn
  * @create 2020-01-04 10:41
  **/
-@ApiModel(value = "用户对象BO",description = "从前端由用户传入的数据封装在此Entiy")
+@ApiModel(value = "用户对象BO", description = "从前端由用户传入的数据封装在此Entiy")
 @Data
 public class UserBO {
 
