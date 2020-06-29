@@ -102,7 +102,7 @@ public class PassportController extends BaseController {
             return JSONResult.errorMsg("用户名或者密码不能为空");
         }
 
-        //1. 实现注册
+        //1. 实现登录
         Users users = userSerivce.queryUserForLogin(username, MD5Utils.getMD5Str(password));
         if (users == null) {
             return JSONResult.errorMsg("用户名或者密码不正确");
