@@ -1,0 +1,33 @@
+server:
+  port: 8090
+
+spring:
+  datasource:                                           # 数据源的相关配置
+    url: jdbc:mysql://localhost:3306/nvwa?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+    username: root
+    password: root
+  redis:
+    #单机单实例
+    database: 1
+    host: localhost
+    port: 6379
+    #Redis哨兵模式
+    #    database: 1
+    #    password: "000000"
+    #    sentinel:
+    #      master: redis-master
+    #      nodes: 172.16.192.189:26379,172.16.192.193:26379,172.16.192.194:26379
+    #Redis集群模式
+  #    password: "000000"
+  #    cluster:
+  #      nodes: 172.16.192.189:6379,172.16.192.193:6379,172.16.192.194:6379
+
+
+############################################################
+#
+# mybatis 配置
+#
+############################################################
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
