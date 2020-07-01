@@ -161,9 +161,24 @@ public class SSOController {
 
     }
 
+    @PostMapping("logout")
+    @ResponseBody
+    public JSONResult logout(String userId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        //0. 获取CAS中用户门票
+        String userTicket = getCookie(request,COOKIE_USER_TICKET);
+        //1. 清除user
+        delCookie(COOKIE_USER_TICKET, response);
+        redisOperator.del(REDIS_USER_TICKET + ":" + userTicket);
+        //2. 清除用户全局会话
+        redisOperator.del(REDIS_USER_TOKEN + ":" + userId);
+
+        return JSONResult.ok();
+    }
+
+
     @PostMapping("verifyTmpTicket")
     @ResponseBody
-    private JSONResult verifyTmpTicket(String tmpTicket, HttpServletRequest request) throws Exception {
+    public JSONResult verifyTmpTicket(String tmpTicket, HttpServletRequest request) throws Exception {
         // 使用一次性临时票据来验证用户是否登录，如果登录过，把用户会话信息返回给站点
         //使用完毕后，需要销毁临时票据
         String tmpTicketValue = redisOperator.get(REDIS_TEMP_TICKET+":"+tmpTicket);
@@ -208,6 +223,14 @@ public class SSOController {
         Cookie cookie = new Cookie(key,value);
         cookie.setDomain("sso.com");
         cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
+    private void delCookie(String key, HttpServletResponse response){
+        Cookie cookie = new Cookie(key,null);
+        cookie.setDomain("sso.com");
+        cookie.setPath("/");
+        cookie.setMaxAge(-1);
         response.addCookie(cookie);
     }
 
